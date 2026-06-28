@@ -5,13 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/main.mjs" type="module"></script>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/organizations">Organizations</a></li>
-            <li><a href="/categories">Categories</a></li>
-            <li><a href="/projects">Projects</a></li>
-        </ul>
+
+    <nav id="navbar" class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo-group">
+                <div class="logo-box">
+                    <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                </div>
+                <span class="logo-text">ServiceNetwork</span>
+            </a>
+
+            <div class="desktop-menu">
+                <a href="/" class="nav-link nav-link-highlight">Home</a>
+                <a href="/organizations" class="nav-link">Organizations</a>
+                <a href="/categories" class="nav-link">Categories</a>
+                <a href="/projects" class="nav-link">Projects</a>
+            </div>
+
+            <div class="desktop-actions">
+                <a href="#" class="btn-text">Sign In</a>
+                <a href="#" class="btn-primary">Register</a>
+            </div>
+
+            <button id="mobileMenuBtn" class="mobile-toggle-btn" aria-label="Open Menu">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
     </nav>
+
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-inner">
+            <div class="mobile-menu-header">
+                <span class="mobile-title">Menu</span>
+                <button id="closeMobileMenu" class="mobile-close-btn" aria-label="Close Menu">
+                    <svg class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="mobile-links-container">
+                <a href="/" class="mobile-link highlighted">Home</a>
+                <a href="/organizations" class="mobile-link">Organizations</a>
+                <a href="/categories" class="mobile-link">Categories</a>
+                <a href="/projects" class="mobile-link">Projects</a>
+
+            </div>
+            <div class="mobile-actions-container">
+                <a href="#" class="btn-primary full-width">Register</a>
+                <a href="#" class="btn-outline full-width">Sign In</a>
+            </div>
+        </div>
+    </div>
+    <div id="mobileOverlay" class="mobile-overlay hidden"></div>

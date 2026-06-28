@@ -18,5 +18,8 @@
   "homepage": "https://github.com/BYULabs/cse340#readme",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

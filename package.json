@@ -1,0 +1,19 @@
+{
+  "name": "cse340",
+  "version": "1.0.0",
+  "description": "Learning Server Architecture",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BYULabs/cse340.git"
+  },
+  "author": "Sebastián Iturralde",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BYULabs/cse340/issues"
+  },
+  "homepage": "https://github.com/BYULabs/cse340#readme"
+}

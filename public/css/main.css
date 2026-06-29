@@ -435,6 +435,81 @@ main p {
     transform: translateY(-4px);
 }
 
+/* ==========================================================================
+   Organizations Content Layout Architecture
+   ========================================================================== */
+
+/* Target lists specifically inside the main content zone */
+main ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 48rem;
+    text-align: left;
+}
+
+main ul li {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (min-width: 640px) {
+    main ul li {
+        flex-direction: row;
+        padding: 1.25rem 1.75rem;
+    }
+}
+
+main ul li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: var(--brand-100);
+}
+
+/* Organization Partner Logos */
+main ul li img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: var(--gray-50);
+    padding: 4px;
+    border: 1px solid var(--gray-100);
+    flex-shrink: 0;
+}
+
+/* Text & Link Information Styling */
+main ul li strong {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--navy-900);
+}
+
+/* Subtle separator or alignment help for mobile to desktop transition */
+@media (min-width: 640px) {
+    main ul li strong {
+        margin-right: auto; /* Pushes the email to the far right on desktop views */
+    }
+}
+
+/* Make emails stand out cleanly */
+main ul li {
+    font-size: 0.95rem;
+    color: var(--gray-500);
+}
+
 /* FOOTER */
 .site-footer {
     background-color: var(--navy-950);

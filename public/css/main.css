@@ -571,7 +571,67 @@ main ul.category-grid li:hover {
         0 10px 10px -5px rgba(22, 163, 74, 0.04);
 }
 
-/* FOOTER */
+/* ==========================================================================
+   Projects Card Grid Architecture
+   ========================================================================== */
+
+/* Layout wrapper for project items */
+main ul.projects-grid {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0 0 0;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 56rem;
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    main ul.projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Individual Project Card Components */
+main ul.projects-grid li {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: all 0.25s ease;
+}
+
+main ul.projects-grid li:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-100);
+    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.04);
+}
+
+/* Isolating the Project Title */
+main ul.projects-grid li strong {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy-900);
+    letter-spacing: -0.01em;
+    display: block;
+}
+
+/* Isolating the Project Description Text */
+main ul.projects-grid li .project-desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--gray-600);
+}
+
+/* ==========================================================================
+   Footer Layout Architecture
+   ========================================================================== */
 .site-footer {
     background-color: var(--navy-950);
     color: #ffffff;

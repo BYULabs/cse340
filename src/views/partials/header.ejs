@@ -21,10 +21,10 @@
             </a>
 
             <div class="desktop-menu">
-                <a href="/" class="nav-link nav-link-highlight">Home</a>
-                <a href="/organizations" class="nav-link">Organizations</a>
-                <a href="/categories" class="nav-link">Categories</a>
-                <a href="/projects" class="nav-link">Projects</a>
+                <a href="/" class="nav-link <%= page === 'home' ? 'nav-link-highlight' : '' %>">Home</a>
+                <a href="/organizations" class="nav-link <%= page === 'organizations' ? 'nav-link-highlight' : '' %>">Organizations</a>
+                <a href="/categories" class="nav-link <%= page === 'categories' ? 'nav-link-highlight' : '' %>">Categories</a>
+                <a href="/projects" class="nav-link <%= page === 'projects' ? 'nav-link-highlight' : '' %>">Projects</a>
             </div>
 
             <div class="desktop-actions">
@@ -54,11 +54,10 @@
                 </button>
             </div>
             <div class="mobile-links-container">
-                <a href="/" class="mobile-link highlighted">Home</a>
-                <a href="/organizations" class="mobile-link">Organizations</a>
-                <a href="/categories" class="mobile-link">Categories</a>
-                <a href="/projects" class="mobile-link">Projects</a>
-
+                <a href="/" class="mobile-link <%= page === 'home' ? 'highlighted' : '' %>">Home</a>
+                <a href="/organizations" class="mobile-link <%= page === 'organizations' ? 'highlighted' : '' %>">Organizations</a>
+                <a href="/categories" class="mobile-link <%= page === 'categories' ? 'highlighted' : '' %>">Categories</a>
+                <a href="/projects" class="mobile-link <%= page === 'projects' ? 'highlighted' : '' %>">Projects</a>
             </div>
             <div class="mobile-actions-container">
                 <a href="#" class="btn-primary full-width">Register</a>

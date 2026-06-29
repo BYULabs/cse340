@@ -30,23 +30,19 @@ app.set('views', path.join(__dirname, 'src/views'));
   * Routes
   */
 app.get('/', async (req, res) => {
-    const title = 'Home';
-    res.render('home', { title });
+    res.render('home', { title: 'Home', page: 'home' });
 });
 
 app.get('/organizations', async (req, res) => {
-    const title = 'Our Partner Organizations';
-    res.render('organizations', { title });
+    res.render('organizations', { title: 'Our Partner Organizations', page: 'organizations' });
 });
 
 app.get('/categories', async (req, res) => {
-    const title = 'Service Categories';
-    res.render('categories', { title });
+    res.render('categories', { title: 'Service Categories', page: 'categories' });
 });
 
 app.get('/projects', async (req, res) => {
-    const title = 'Service Projects';
-    res.render('projects', { title });
+    res.render('projects', { title: 'Service Projects', page: 'projects' });
 });
 
 app.listen(PORT, () => {

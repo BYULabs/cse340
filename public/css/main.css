@@ -353,6 +353,88 @@ body {
     display: none;
 }
 
+/* ==========================================================================
+   Main Content Layout Architecture
+   ========================================================================== */
+
+/* Layout core forcing footer to stick to the bottom if content is short */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    main {
+        padding: 5rem 24px;
+        gap: 2rem;
+    }
+}
+
+/* Typography Enhancements */
+main h1 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brand-600);
+    margin-bottom: -0.5rem;
+}
+
+main h2 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--navy-900);
+    letter-spacing: -0.03em;
+    max-width: 42rem;
+}
+
+@media (min-width: 768px) {
+    main h2 {
+        font-size: 3.5rem;
+    }
+}
+
+main p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--gray-600);
+    max-width: 36rem;
+    margin-bottom: 1rem;
+}
+
+/* Image Presentation & Responsive Engine */
+.main-logo {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.05), 
+        0 10px 10px -5px rgba(0, 0, 0, 0.03);
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.main-logo:hover {
+    transform: translateY(-4px);
+}
+
 /* FOOTER */
 .site-footer {
     background-color: var(--navy-950);

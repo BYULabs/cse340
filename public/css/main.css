@@ -629,6 +629,28 @@ main ul.projects-grid li .project-desc {
     color: var(--gray-600);
 }
 
+/* Metadata Footer Container (Location & Date wrapper) */
+main ul.projects-grid li .project-details {
+    margin-top: auto; /* Pushes the details block to the bottom of the card uniformly */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--gray-100); /* Optional: distinct separator line */
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+
+/* Individual Metadata items */
+main ul.projects-grid li .project-location,
+main ul.projects-grid li .project-date {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
 /* ==========================================================================
    Footer Layout Architecture
    ========================================================================== */

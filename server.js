@@ -37,8 +37,10 @@ app.get('/', async (req, res) => {
 
 app.get('/organizations', async (req, res) => {
     const organizations = await getAllOrganizations();
-    console.log(organizations);
-    res.render('organizations', { title: 'Our Partner Organizations', page: 'organizations' });
+    const title = 'Our Partner Organizations';
+    const page = 'organizations';
+
+    res.render('organizations', { title, organizations, page });
 });
 
 app.get('/categories', async (req, res) => {

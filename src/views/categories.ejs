@@ -5,10 +5,9 @@
 
     <h2>Some of our Categories</h2>
     <ul class="category-grid">
-        <li>Environmental</li>
-        <li>Educational</li>
-        <li>Community Service</li>
-        <li>Health and Wellness</li>
+        <% categories.forEach(category => { %>
+            <li><%= category.name %></li>
+        <% }); %>
     </ul>
 </main>
 

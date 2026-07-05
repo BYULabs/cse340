@@ -4,6 +4,7 @@ import path from 'path';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from './src/models/projects.js';
+import { getAllCategories } from './src/models/categories.js'; // Imported your new categories model
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,7 +46,11 @@ app.get('/organizations', async (req, res) => {
 });
 
 app.get('/categories', async (req, res) => {
-    res.render('categories', { title: 'Service Categories', page: 'categories' });
+    const categories = await getAllCategories();
+    const title = 'Service Categories';
+    const page = 'categories';
+
+    res.render('categories', { title, categories, page });
 });
 
 app.get('/projects', async (req, res) => {

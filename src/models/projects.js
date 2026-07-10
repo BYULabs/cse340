@@ -14,8 +14,14 @@ const getAllProjects = async () => {
         INNER JOIN public.organization o ON p.organization_id = o.organization_id;
     `;
 
-    const result = await db.query(query);
-    return result.rows;
+    try {
+        const result = await db.query(query);
+        return result.rows;
+    } catch (error) {
+        console.error("Data Layer Error [getAllProjects]:", error.message);
+        
+        throw new Error("Unable to retrieve project listings at this time.");
+    }
 }
 
 export { getAllProjects }

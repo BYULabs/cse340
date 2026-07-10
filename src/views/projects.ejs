@@ -5,18 +5,30 @@
 
     <h2>Upcoming Service Projects</h2>
     <ul class="projects-grid">
-        <li>
-            <strong>Park Cleanup</strong>
-            <span class="project-desc">Join us to clean up local parks and make them beautiful!</span>
-        </li>
-        <li>
-            <strong>Food Drive</strong>
-            <span class="project-desc">Help collect and distribute food to those in need.</span>
-        </li>
-        <li>
-            <strong>Community Tutoring</strong>
-            <span class="project-desc">Volunteer to tutor students in various subjects.</span>
-        </li>
+        <% projects.forEach(project => { %>
+            <% 
+                const formattedDate = new Date(project.project_date).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            %>
+            <li>
+                <div class="project-header">
+                    <strong class="project-title-block">
+                        <span class="meta-inline-date"><%= formattedDate %>:</span> 
+                        <span class="title-text"><%= project.title %></span> 
+                        <span class="meta-inline-org">(<%= project.organization_name %>)</span>
+                    </strong>
+                </div>
+                
+                <p class="project-desc"><%= project.description %></p>
+                
+                <div class="project-details">
+                    <span class="project-location">📍 <%= project.location %></span>
+                </div>
+            </li>
+        <% }); %>
     </ul>
 </main>
 

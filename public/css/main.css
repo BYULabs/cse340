@@ -608,25 +608,78 @@ main ul.projects-grid li {
 }
 
 main ul.projects-grid li:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     border-color: var(--brand-100);
-    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.04);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.05),
+        0 10px 10px -5px rgba(0, 0, 0, 0.02);
 }
 
-/* Isolating the Project Title */
-main ul.projects-grid li strong {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--navy-900);
-    letter-spacing: -0.01em;
+/* Heading Typography Layout */
+main ul.projects-grid li .project-header {
     display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Master container for our combined required string format */
+main ul.projects-grid li .project-title-block {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    display: block;
+}
+
+/* 1. The Date Portion */
+main ul.projects-grid li .meta-inline-date {
+    color: var(--brand-600);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* 2. The Main Project Title */
+main ul.projects-grid li .title-text {
+    color: var(--navy-900);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* 3. The Organization Label */
+main ul.projects-grid li .meta-inline-org {
+    color: var(--gray-500);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-left: 0.25rem;
 }
 
 /* Isolating the Project Description Text */
 main ul.projects-grid li .project-desc {
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--gray-600);
+    margin: 0;
+}
+
+/* Metadata Footer Container (Location wrapper) */
+main ul.projects-grid li .project-details {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-100);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+
+/* Individual Metadata items */
+main ul.projects-grid li .project-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--gray-500);
 }
 
 /* ==========================================================================

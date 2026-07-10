@@ -48,12 +48,16 @@ app.get('/categories', async (req, res) => {
     res.render('categories', { title: 'Service Categories', page: 'categories' });
 });
 
-app.get('/projects', async (req, res) => {
-    const projects = await getAllProjects();
-    const title = 'Service Projects';
-    const page = 'projects';
-
-    res.render('projects', { title, projects, page });
+app.get('/projects', async (req, res, next) => {
+    try {
+        const projects = await getAllProjects();
+        const title = 'Service Projects';
+        const page = 'projects';
+        res.render('projects', { title, projects, page });
+    } catch (error) {
+        console.error("Error loading projects page:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
 });
 
 app.listen(PORT, async () => {

@@ -2,18 +2,16 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
-import { getAllOrganizations } from './src/models/organizations.js';
-import { getAllProjects } from './src/models/projects.js';
-import { getAllCategories } from './src/models/categories.js'; // Imported your new categories model
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import router from './src/routes.js';
 
 // Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 
 // Define the port number the server will listen on
 const PORT = process.env.PORT || 3000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -44,47 +42,8 @@ app.use((req, res, next) => {
     next();
 });
 
-/**
-  * Routes
-  */
-app.get('/', async (req, res) => {
-    res.render('home', { title: 'Home', page: 'home' });
-});
-
-app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    const title = 'Our Partner Organizations';
-    const page = 'organizations';
-
-    res.render('organizations', { title, organizations, page });
-});
-
-app.get('/categories', async (req, res) => {
-    const categories = await getAllCategories();
-    const title = 'Service Categories';
-    const page = 'categories';
-
-    res.render('categories', { title, categories, page });
-});
-
-app.get('/projects', async (req, res, next) => {
-    try {
-        const projects = await getAllProjects();
-        const title = 'Service Projects';
-        const page = 'projects';
-        res.render('projects', { title, projects, page });
-    } catch (error) {
-        console.error("Error loading projects page:", error);
-        res.status(500).send(`Database Error: ${error.message}`);
-    }
-});
-
-// Test route for 500 errors
-// app.get('/test-error', (req, res, next) => {
-//     const err = new Error('This is a test error');
-//     err.status = 500;
-//     next(err);
-// });
+// Use the imported router to handle routes
+app.use(router);
 
 // Catch-all route for 404 errors
 app.use((req, res, next) => {

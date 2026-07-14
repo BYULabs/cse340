@@ -1,12 +1,63 @@
 <%- include('partials/header') %>
 
-<main>
-    <h1><%= title %></h1>
-    
-    <h2>Welcome to the CSE 340 Service Network!</h2>
-    <p>Our mission is to promote service across the world by connecting volunteers with service opportunities in their community.</p>
+<main class="home-container">
+    <!-- 1. Hero Section -->
+    <section class="home-hero">
+        <span class="hero-badge">Chippewa Valley & Beyond</span>
+        <h2>Building unity through community service.</h2>
+        <p>ServiceNetwork connects passionate volunteers with local organizations to create lasting, meaningful community impact.</p>
+        
+        <div class="hero-actions">
+            <a href="/projects" class="btn-primary">Find a Project</a>
+            <a href="/organizations" class="btn-outline">Our Partners</a>
+        </div>
+    </section>
 
-    <img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
+    <!-- 2. Impact Stats Panel -->
+    <section class="home-stats">
+        <div class="stat-card">
+            <span class="stat-number">45+</span>
+            <span class="stat-label">Partner Orgs</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">120+</span>
+            <span class="stat-label">Active Projects</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number">1.2k+</span>
+            <span class="stat-label">Hours Volunteered</span>
+        </div>
+    </section>
+
+    <!-- 3. How It Works -->
+    <section class="home-how-it-works">
+        <h3 class="section-title">How the Network Works</h3>
+        <div class="steps-grid">
+            <div class="step-item">
+                <div class="step-num">1</div>
+                <h4>Discover Causes</h4>
+                <p>Browse local service projects by categories that match your skills and passions.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-num">2</div>
+                <h4>Connect & RSVP</h4>
+                <p>Sign up directly for volunteer slots and coordinate with partner organizations.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-num">3</div>
+                <h4>Make an Impact</h4>
+                <p>Show up, serve your community, and track your active service history.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Subtle Reference/Partnership Badge -->
+    <section class="home-partnership">
+        <p class="partnership-label">Developed in partnership with</p>
+        <div class="partner-reference-box">
+            <img class="academic-logo-ref" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo Reference">
+        </div>
+    </section>
 </main>
 
 <%- include('partials/footer') %>

@@ -436,6 +436,193 @@ main p {
 }
 
 /* ==========================================================================
+   New ServiceNetwork Home Portal Sections
+   ========================================================================== */
+
+/* 1. Hero Section Layout */
+.home-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+    padding: 2rem 0;
+}
+
+.hero-badge {
+    background-color: var(--brand-50);
+    color: var(--brand-700);
+    padding: 6px 16px;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+}
+
+@media (max-width: 480px) {
+    .hero-actions {
+        flex-direction: column;
+    }
+}
+
+/* 2. Impact Stats */
+.home-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+    max-width: 48rem;
+    margin: 2rem auto;
+}
+
+.stat-card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--brand-600);
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+
+@media (min-width: 640px) {
+    .stat-number {
+        font-size: 2.25rem;
+    }
+    .stat-label {
+        font-size: 0.95rem;
+    }
+}
+
+/* 3. How It Works */
+.home-how-it-works {
+    margin-top: 4rem;
+    text-align: center;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--navy-900);
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.02em;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .steps-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.step-item {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.step-num {
+    width: 32px;
+    height: 32px;
+    background-color: var(--brand-600);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.step-item h4 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--navy-900);
+}
+
+.step-item p {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* 4. Subtle Partnership Reference Footer Badge */
+.home-partnership {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--gray-100);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.partnership-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+
+.partner-reference-box {
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.partner-reference-box:hover {
+    opacity: 1;
+}
+
+.academic-logo-ref {
+    height: 36px; /* Scaled way down so it doesn't compete with main layouts */
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(100%); /* Optional: makes it blend in elegantly */
+    transition: filter 0.2s ease;
+}
+
+.partner-reference-box:hover .academic-logo-ref {
+    filter: none; /* Re-colors on hover for a fun micro-interaction */
+}
+
+/* ==========================================================================
    Organizations Directory Grid Layout Architecture
    ========================================================================== */
 

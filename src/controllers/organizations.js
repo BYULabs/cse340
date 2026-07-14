@@ -1,6 +1,7 @@
-import { getAllOrganizations } from '../models/organizations.js';
+import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+import { getProjectsByOrganizationId } from '../models/projects.js';
 
-export const showOrganizationsPage = async (req, res) => {
+const showOrganizationsPage = async (req, res) => {
     try {
         const organizations = await getAllOrganizations();
         const title = 'Our Partner Organizations';
@@ -12,3 +13,17 @@ export const showOrganizationsPage = async (req, res) => {
         res.status(500).send(`Database Error: ${error.message}`);
     }
 };
+
+const showOrganizationDetailsPage = async (req, res) => {
+    const organizationId = req.params.id;
+    const organizationDetails = await getOrganizationDetails(organizationId);
+    const projects = await getProjectsByOrganizationId(organizationId);
+    const title = 'Organization Details';
+    const page = 'organizations';
+
+
+    res.render('organization', {title, organizationDetails, projects, page});
+};
+
+// Export any controller functions
+export { showOrganizationsPage, showOrganizationDetailsPage };

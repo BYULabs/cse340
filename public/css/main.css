@@ -464,7 +464,8 @@ main ul li {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     transition:
         transform 0.2s ease,
-        box-shadow 0.2s ease;
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 }
 
 @media (min-width: 640px) {
@@ -496,7 +497,22 @@ main ul li img {
 main ul li strong {
     font-size: 1.125rem;
     font-weight: 600;
+}
+
+/* Clean up the new anchor link styling */
+main ul li strong a {
     color: var(--navy-900);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+/* Make the link turn a brand color when the user hovers over either the link OR the card */
+main ul li:hover strong a,
+main ul li strong a:hover {
+    color: var(
+        --brand-600
+    ); /* Falls back to a nice blue if --brand-500 isn't defined */
+    text-decoration: underline;
 }
 
 /* Subtle separator or alignment help for mobile to desktop transition */
@@ -506,8 +522,8 @@ main ul li strong {
     }
 }
 
-/* Make emails stand out cleanly */
-main ul li {
+/* FIX: Target the email span class directly so it doesn't conflict with the li container */
+main ul li .org-email {
     font-size: 0.95rem;
     color: var(--gray-500);
 }
@@ -680,6 +696,218 @@ main ul.projects-grid li .project-location {
     align-items: center;
     gap: 0.35rem;
     color: var(--gray-500);
+}
+
+/* ==========================================================================
+   Organization Profile & Details Architecture
+   ========================================================================== */
+
+/* Main layout overrides specifically for the organization page */
+main.org-detail-container {
+    max-width: 56rem; /* Keeps it incredibly clean and readable */
+    text-align: left;
+    align-items: stretch; /* Prevents center-aligning card internals */
+}
+
+/* 1. Profile Card Wrapper */
+.org-profile-card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.02),
+        0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .org-profile-card {
+        padding: 2.25rem;
+    }
+}
+
+/* 2. Card Header Elements */
+.org-profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-100);
+    padding-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .org-profile-header {
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+        gap: 2rem;
+    }
+}
+
+/* Rounded Logo Display */
+.org-profile-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: var(--gray-50);
+    padding: 6px;
+    border: 1px solid var(--gray-100);
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.org-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.org-profile-info h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--navy-900);
+    line-height: 1.2;
+}
+
+.org-profile-email {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--brand-600);
+}
+
+/* Card Body (Description) */
+.org-profile-desc {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--gray-700);
+    margin: 0;
+    max-width: 100%;
+}
+
+/* ==========================================================================
+   Organization Projects Grid Section
+   ========================================================================== */
+
+.org-projects-section {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.org-projects-section .section-subtitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--navy-900);
+    letter-spacing: -0.02em;
+}
+
+/* Projects Card Grid */
+main ul.org-projects-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+    text-align: left;
+}
+
+@media (min-width: 640px) {
+    main ul.org-projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Individual Project Card list-item styling */
+main ul.org-projects-grid li {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 160px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+main ul.org-projects-grid li:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand-100);
+    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.04);
+}
+
+/* Project Card Title & Anchors */
+.project-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.project-card-title a {
+    color: var(--navy-900);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+main ul.org-projects-grid li:hover .project-card-title a {
+    color: var(--brand-600);
+}
+
+.project-card-title a:hover {
+    text-decoration: underline;
+}
+
+/* Small project abstract layout */
+.project-card-teaser {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Project Card Footer */
+.project-card-footer {
+    margin-top: 1.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-50);
+}
+
+.project-action-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand-600);
+    transition: color 0.2s ease;
+}
+
+main ul.org-projects-grid li:hover .project-action-link {
+    color: var(--brand-700);
+}
+
+/* Empty State Handling */
+.no-projects-box {
+    background-color: var(--gray-50);
+    border: 2px dashed var(--gray-100);
+    border-radius: 16px;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.no-projects-box p {
+    font-size: 1rem;
+    color: var(--gray-500);
+    margin: 0 auto;
 }
 
 /* ==========================================================================

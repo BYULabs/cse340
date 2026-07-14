@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<main class="org-detail-container">
+    <!-- Subtitle (Matches site design hierarchy) -->
+    <h1><%= title %></h1>
+
+    <!-- Organization Detail Card -->
+    <section class="org-profile-card">
+        <div class="org-profile-header">
+            <img class="org-profile-logo" src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> logo">
+            <div class="org-profile-info">
+                <h2><%= organizationDetails.name %></h2>
+                <% if (organizationDetails.contact_email) { %>
+                    <span class="org-profile-email">✉️ <%= organizationDetails.contact_email %></span>
+                <% } %>
+            </div>
+        </div>
+        <div class="org-profile-body">
+            <p class="org-profile-desc"><%= organizationDetails.description %></p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="org-projects-section">
+        <h3 class="section-subtitle">Active Service Projects</h3>
+        
+        <% if (projects && projects.length > 0) { %>
+            <ul class="org-projects-grid">
+                <% projects.forEach(project => { %>
+                    <li>
+                        <div class="project-card-content">
+                            <h4 class="project-card-title">
+                                <a href="/project/<%= project.project_id %>"><%= project.title %></a>
+                            </h4>
+                            <p class="project-card-teaser">Join us and make an impact on this upcoming initiative.</p>
+                        </div>
+                        <div class="project-card-footer">
+                            <span class="project-action-link">View Details →</span>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <div class="no-projects-box">
+                <p>This organization doesn't have any active service projects listed at the moment.</p>
+            </div>
+        <% } %>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

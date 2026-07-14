@@ -1,15 +1,32 @@
 <%- include('partials/header') %>
 
-<main>
+<main class="orgs-directory-container">
     <h1><%= title %></h1>
 
-    <p>Here are a few of our partner organizations:</p>
-    <ul>
+    <p class="section-lead">Partnering with world-class organizations to connect volunteers with local impact.</p>
+    
+    <!-- Restructured grid container -->
+    <ul class="organizations-grid">
         <% organizations.forEach(organization => { %>
-            <li>
-                <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
-                <strong><%= organization.name %></strong>
-                <span class="org-email"><%= organization.contact_email %></span>
+            <li class="org-card">
+                <div class="org-card-header">
+                    <img class="org-card-logo" src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
+                </div>
+                
+                <div class="org-card-content">
+                    <strong class="org-card-name">
+                        <a href="/organization/<%= organization.organization_id %>">
+                            <%= organization.name %>
+                        </a>
+                    </strong>
+                    <span class="org-card-email">✉️ <%= organization.contact_email %></span>
+                </div>
+                
+                <div class="org-card-footer">
+                    <a href="/organization/<%= organization.organization_id %>" class="org-card-action">
+                        View Profile →
+                    </a>
+                </div>
             </li>
         <% }); %>
     </ul>

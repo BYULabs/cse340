@@ -7,7 +7,7 @@
     <ul class="projects-grid">
         <% projects.forEach(project => { %>
             <% 
-                const formattedDate = new Date(project.project_date).toLocaleDateString(undefined, {
+                const formattedDate = new Date(project.date).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric'
@@ -17,8 +17,14 @@
                 <div class="project-header">
                     <strong class="project-title-block">
                         <span class="meta-inline-date"><%= formattedDate %>:</span> 
-                        <span class="title-text"><%= project.title %></span> 
-                        <span class="meta-inline-org">(<%= project.organization_name %>)</span>
+                        <!-- Link to the service project details page -->
+                        <a href="/project/<%= project.project_id %>" class="title-text-link">
+                            <span class="title-text"><%= project.title %></span>
+                        </a>
+                        <!-- Link to the organization details page -->
+                        <span class="meta-inline-org">
+                            (<a href="/organization/<%= project.organization_id %>" class="org-inline-link"><%= project.organization_name %></a>)
+                        </span>
                     </strong>
                 </div>
                 

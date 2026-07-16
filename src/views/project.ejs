@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<main class="project-detail-container">
+    <h1><%= title %></h1>
+
+    <section class="project-profile-card">
+        <div class="project-profile-header">
+            <div class="project-profile-info">
+                <h2><%= project.title %></h2>
+                <div class="project-meta">
+                    <% 
+                        const formattedDate = new Date(project.date).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                    %>
+                    <span class="project-date">📅 <%= formattedDate %></span>
+                    <span class="project-location">📍 <%= project.location %></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="project-profile-body">
+            <p class="project-desc"><%= project.description %></p>
+            
+            <div class="project-organization-reference">
+                <strong>Partner Organization:</strong> 
+                <a href="/organization/<%= project.organization_id %>" class="org-link">
+                    <%= project.organization_name %>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

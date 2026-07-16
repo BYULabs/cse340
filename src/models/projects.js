@@ -84,9 +84,41 @@ const getUpcomingProjects = async (numberOfProjects) => {
     }
 }
 
+/**
+ * Retrieve the details of a single service project by its ID.
+ * @param {number|string} id - The ID of the service project.
+ */
+const getProjectDetails = async (id) => {
+    const query = `
+        SELECT 
+            p.project_id, 
+            p.title, 
+            p.description, 
+            p.project_date AS date, 
+            p.location, 
+            p.organization_id,
+            o.name AS organization_name
+        FROM public.project p
+        INNER JOIN public.organization o ON p.organization_id = o.organization_id
+        WHERE p.project_id = $1;
+    `;
+
+    try {
+        const queryParams = [id];
+        const result = await db.query(query, queryParams);
+
+        // Return the project object if found, otherwise return null
+        return result.rows.length > 0 ? result.rows[0] : null;
+    } catch (error) {
+        console.error("Data Layer Error [getProjectDetails]:", error.message);
+        throw new Error("Unable to retrieve project details at this time.");
+    }
+};
+
 // Export the model functions
 export { 
     getAllProjects, 
     getProjectsByOrganizationId, 
-    getUpcomingProjects 
+    getUpcomingProjects, 
+    getProjectDetails
 };

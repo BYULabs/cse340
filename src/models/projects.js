@@ -115,10 +115,42 @@ const getProjectDetails = async (id) => {
     }
 };
 
+/**
+ * Retrieve all service projects associated with a given category.
+ * @param {number|string} categoryId - The ID of the category.
+ */
+const getProjectsByCategoryId = async (categoryId) => {
+    const query = `
+        SELECT 
+            p.project_id, 
+            p.title, 
+            p.description, 
+            p.location, 
+            p.project_date, 
+            p.organization_id,
+            o.name AS organization_name
+        FROM public.project p
+        INNER JOIN public.organization o ON p.organization_id = o.organization_id
+        INNER JOIN public.project_category pc ON p.project_id = pc.project_id
+        WHERE pc.category_id = $1
+        ORDER BY p.project_date DESC;
+    `;
+
+    try {
+        const queryParams = [categoryId];
+        const result = await db.query(query, queryParams);
+        return result.rows;
+    } catch (error) {
+        console.error("Data Layer Error [getProjectsByCategoryId]:", error.message);
+        throw new Error("Unable to retrieve projects for this category at this time.");
+    }
+};
+
 // Export the model functions
 export { 
     getAllProjects, 
     getProjectsByOrganizationId, 
     getUpcomingProjects, 
-    getProjectDetails
+    getProjectDetails,
+    getProjectsByCategoryId
 };

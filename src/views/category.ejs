@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+
+<main class="project-detail-container">
+    <!-- Subtitle (Matches site design hierarchy) -->
+    <h1><%= title %></h1>
+
+    <h2><%= category.name %></h2>
+    <p class="section-lead">Explore active initiatives grouped under this service sector.</p>
+
+    <!-- Projects Grid Section -->
+    <section class="org-projects-section" style="width: 100%;">
+        <% if (projects && projects.length > 0) { %>
+            <ul class="projects-grid" style="margin-top: 1rem;">
+                <% projects.forEach(project => { %>
+                    <% 
+                        const formattedDate = new Date(project.project_date).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        });
+                    %>
+                    <li>
+                        <div class="project-header">
+                            <strong class="project-title-block">
+                                <span class="meta-inline-date"><%= formattedDate %>:</span> 
+                                <!-- Required link to the service project details page -->
+                                <a href="/project/<%= project.project_id %>" class="title-text-link">
+                                    <span class="title-text"><%= project.title %></span>
+                                </a>
+                                <!-- Context link to the partner organization details page -->
+                                <span class="meta-inline-org">
+                                    (<a href="/organization/<%= project.organization_id %>" class="org-inline-link"><%= project.organization_name %></a>)
+                                </span>
+                            </strong>
+                        </div>
+                        
+                        <p class="project-desc"><%= project.description %></p>
+                        
+                        <div class="project-details">
+                            <span class="project-location">📍 <%= project.location %></span>
+                        </div>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <div class="no-projects-box">
+                <p>There are no active service projects listed under this category at the moment.</p>
+            </div>
+        <% } %>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,4 +1,5 @@
-import { getUpcomingProjects, getProjectDetails } from '../models/projects.js';
+import { getUpcomingProjects, getProjectDetails, getProjectsByCategoryId } from '../models/projects.js';
+import { getCategoriesByProjectId } from '../models/categories.js';
 
 // Configuration constant for the upcoming projects list
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -21,26 +22,27 @@ export const showProjectsPage = async (req, res, next) => {
 };
 
 /**
- * Renders the details page for a single specific service project.
+ * Renders the details page for a single specific service project, including its categories.
  */
 export const showProjectDetailsPage = async (req, res, next) => {
     try {
-        // Extract the service project ID from the URL parameters
         const { id } = req.params;
 
-        // Retrieve the service project details from the database
+        // 1. Retrieve the service project details
         const project = await getProjectDetails(id);
 
-        // Optional: Handle the case if a project isn't found (e.g., 404 page)
         if (!project) {
             return res.status(404).send('Service project not found.');
         }
 
-        const title = project.title; // Set page title dynamically to the project name
-        const page = 'project-details'; // Unique page identifier for navigation highlighting if needed
+        // 2. Fetch the categories assigned to this specific project
+        const categories = await getCategoriesByProjectId(id);
 
-        // Render the project.ejs view with the retrieved project data
-        res.render('project', { title, project, page });
+        const title = project.title;
+        const page = 'project-details';
+
+        // 3. Pass both 'project' and 'categories' to your view
+        res.render('project', { title, project, categories, page });
     } catch (error) {
         console.error("Error loading project details page:", error);
         res.status(500).send(`Database Error: ${error.message}`);

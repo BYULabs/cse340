@@ -6,7 +6,12 @@
     <h2>Some of our Categories</h2>
     <ul class="category-grid">
         <% categories.forEach(category => { %>
-            <li><%= category.name %></li>
+            <!-- Modified list item to look clean and act as a link to the category details route -->
+            <li style="padding: 0;">
+                <a href="/category/<%= category.category_id %>" style="text-decoration: none; color: inherit; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 2rem 1.5rem;">
+                    <%= category.name %>
+                </a>
+            </li>
         <% }); %>
     </ul>
 </main>

@@ -22,6 +22,17 @@
         </div>
         
         <div class="project-profile-body">
+            <!-- New Section: Category Tags -->
+            <% if (categories && categories.length > 0) { %>
+                <div class="project-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <% categories.forEach(category => { %>
+                        <a href="/category/<%= category.category_id %>" class="hero-badge" style="text-decoration: none; transition: background-color 0.2s ease, color 0.2s ease; display: inline-block;">
+                            <%= category.name %>
+                        </a>
+                    <% }); %>
+                </div>
+            <% } %>
+
             <p class="project-desc"><%= project.description %></p>
             
             <div class="project-organization-reference">

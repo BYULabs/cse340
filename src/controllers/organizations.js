@@ -25,5 +25,12 @@ const showOrganizationDetailsPage = async (req, res) => {
     res.render('organization', {title, organizationDetails, projects, page});
 };
 
+const showNewOrganizationForm = async (req, res) => {
+    const title = 'Add New Organization';
+    const page = 'organizations'; // Highlight the "Organizations" link in header
+
+    res.render('new-organization', { title, page });
+};
+
 // Export any controller functions
-export { showOrganizationsPage, showOrganizationDetailsPage };
+export { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm };

@@ -1294,6 +1294,92 @@ main.project-detail-container {
 }
 
 /* ==========================================================================
+   Form Pages Architecture (New Organization & Inputs)
+   ========================================================================== */
+
+main.form-page-container {
+    max-width: 40rem;
+    text-align: center;
+}
+
+.form-card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    width: 100%;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.02),
+        0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    text-align: left;
+}
+
+@media (min-width: 640px) {
+    .form-card {
+        padding: 2.5rem;
+    }
+}
+
+.styled-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--navy-900);
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    font-family: var(--font-sans);
+    color: var(--gray-800);
+    background-color: var(--gray-50);
+    border: 1px solid var(--gray-100);
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    background-color: var(--white);
+    border-color: var(--brand-600);
+    box-shadow: 0 0 0 4px var(--brand-50);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 480px) {
+    .form-actions {
+        flex-direction: row;
+    }
+}
+
+/* ==========================================================================
    Footer Layout Architecture
    ========================================================================== */
 .site-footer {

@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<main class="form-page-container">
+    <h1><%= title %></h1>
+    <p class="section-lead">Select the service categories to associate with <strong><%= project.title %></strong>.</p>
+
+    <!-- FLASH MESSAGES -->
+    <% if (messages && messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul class="alert-list">
+                <% messages.error.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (messages && messages.success && messages.success.length > 0) { %>
+        <div class="alert alert-success">
+            <ul class="alert-list">
+                <% messages.success.forEach(function(msg) { %>
+                    <li><%= msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <div class="form-card">
+        <form action="/project/<%= project.project_id %>/assign-categories" method="POST" class="styled-form">
+            
+            <div class="form-group">
+                <label>Select Categories</label>
+                <div class="checkbox-group">
+                    <% 
+                        // Map assigned category IDs for fast lookup
+                        const assignedIds = assignedCategories.map(cat => Number(cat.category_id)); 
+                    %>
+                    
+                    <% if (allCategories && allCategories.length > 0) { %>
+                        <% allCategories.forEach(function(category) { %>
+                            <% const isChecked = assignedIds.includes(Number(category.category_id)); %>
+                            <label class="checkbox-label" for="category-<%= category.category_id %>">
+                                <input 
+                                    type="checkbox" 
+                                    id="category-<%= category.category_id %>" 
+                                    name="categories" 
+                                    value="<%= category.category_id %>"
+                                    <%= isChecked ? 'checked' : '' %>
+                                />
+                                <span class="checkbox-text"><%= category.name %></span>
+                            </label>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="no-categories-text">No categories available to assign.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary full-width">Save Assignments</button>
+                <a href="/project/<%= project.project_id %>" class="btn-outline full-width">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

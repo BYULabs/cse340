@@ -1273,9 +1273,20 @@ main.project-detail-container {
 
 /* 2. Card Header and Title block */
 .project-profile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
     border-bottom: 1px solid var(--gray-100);
     padding-bottom: 1.5rem;
     width: 100%;
+}
+
+@media (min-width: 640px) {
+    .project-profile-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
 }
 
 .project-profile-info {
@@ -1289,6 +1300,18 @@ main.project-detail-container {
     font-weight: 800;
     color: var(--navy-900);
     line-height: 1.2;
+}
+
+/* Action Button Area (e.g. Assign Categories button) */
+.project-profile-actions {
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .project-profile-actions {
+        margin-top: 0;
+        margin-left: auto;
+    }
 }
 
 /* Metadata strip (Date and Location inline alignment) */
@@ -1497,6 +1520,53 @@ main.form-page-container {
 
 .alert-list li {
     font-weight: 500;
+}
+
+/* ==========================================================================
+   Checkbox Group & Assign Categories Styles
+   ========================================================================== */
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--gray-50);
+    border: 1px solid var(--gray-100);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label:hover {
+    background-color: var(--brand-50);
+    border-color: var(--brand-100);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 1.2rem;
+    height: 1.2rem;
+    accent-color: var(--brand-600);
+    cursor: pointer;
+}
+
+.checkbox-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--navy-900);
+}
+
+.no-categories-text {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    font-style: italic;
 }
 
 /* ==========================================================================

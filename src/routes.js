@@ -8,7 +8,12 @@ import {
     processNewProjectForm,
     projectValidation 
 } from './controllers/projects.js';
-import { showCategoriesPage, showCategoryDetailsPage } from './controllers/categories.js';
+import { 
+    showCategoriesPage, 
+    showCategoryDetailsPage,
+    showAssignCategoriesForm,
+    processAssignCategoriesForm
+} from './controllers/categories.js';
 import { testErrorPage } from './controllers/errors.js';
 import {
     showOrganizationDetailsPage,
@@ -35,6 +40,10 @@ router.get('/project/:id', showProjectDetailsPage);
 
 // Route for category details page
 router.get('/category/:id', showCategoryDetailsPage);
+
+// Routes for assigning categories to a project
+router.get('/project/:projectId/assign-categories', showAssignCategoriesForm);
+router.post('/project/:projectId/assign-categories', processAssignCategoriesForm);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

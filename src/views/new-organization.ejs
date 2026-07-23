@@ -6,8 +6,8 @@
 
     <!-- DISPLAY FLASH MESSAGES HERE -->
     <% if (messages && messages.error && messages.error.length > 0) { %>
-        <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
-            <ul style="margin: 0; padding-left: 20px;">
+        <div class="alert alert-danger">
+            <ul class="alert-list">
                 <% messages.error.forEach(function(error) { %>
                     <li><%= error %></li>
                 <% }); %>
@@ -16,8 +16,8 @@
     <% } %>
 
     <% if (messages && messages.success && messages.success.length > 0) { %>
-        <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 12px; margin-bottom: 20px; border-radius: 4px;">
-            <ul style="margin: 0; padding-left: 20px;">
+        <div class="alert alert-success">
+            <ul class="alert-list">
                 <% messages.success.forEach(function(msg) { %>
                     <li><%= msg %></li>
                 <% }); %>
@@ -29,7 +29,6 @@
         <form action="/new-organization" method="POST" class="styled-form">
             <div class="form-group">
                 <label for="name">Organization Name</label>
-                <!-- Removed HTML required attribute to let backend validation run -->
                 <input 
                     type="text" 
                     id="name" 
@@ -40,7 +39,6 @@
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <!-- Removed HTML required attribute -->
                 <textarea 
                     id="description" 
                     name="description" 
@@ -51,7 +49,6 @@
 
             <div class="form-group">
                 <label for="contactEmail">Contact Email</label>
-                <!-- Changed type to text so you can test invalid email formats like "invalid-email" -->
                 <input 
                     type="text" 
                     id="contactEmail" 

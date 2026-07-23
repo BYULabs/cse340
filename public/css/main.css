@@ -1410,6 +1410,46 @@ main.form-page-container {
 }
 
 /* ==========================================================================
+   Alert & Flash Messages Architecture
+   ========================================================================== */
+
+.alert {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    border: 1px solid transparent;
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.alert-success {
+    background-color: var(--brand-50);
+    border-color: var(--brand-100);
+    color: var(--brand-700);
+}
+
+.alert-list {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.alert-list li {
+    font-weight: 500;
+}
+
+/* ==========================================================================
    Footer Layout Architecture
    ========================================================================== */
 .site-footer {

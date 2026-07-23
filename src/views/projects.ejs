@@ -4,6 +4,12 @@
     <h1><%= title %></h1>
 
     <h2>Upcoming Service Projects</h2>
+
+    <!-- Call-to-action to create a new project -->
+    <div style="margin-top: 1rem;">
+        <a href="/new-project" class="btn-primary">+ Add New Project</a>
+    </div>
+
     <ul class="projects-grid">
         <% projects.forEach(project => { %>
             <% 

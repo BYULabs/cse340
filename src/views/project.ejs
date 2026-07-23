@@ -20,8 +20,11 @@
                 </div>
             </div>
 
-            <!-- Action Button to Assign Categories -->
-            <div class="project-profile-actions">
+            <!-- Action Buttons: Edit Project and Assign Categories -->
+            <div class="project-profile-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a href="/edit-project/<%= project.project_id || project.id %>" class="btn-outline btn-edit-org">
+                    ✏️ Edit Project
+                </a>
                 <a href="/project/<%= project.project_id || project.id %>/assign-categories" class="btn-outline btn-edit-org">
                     🏷️ Assign Categories
                 </a>

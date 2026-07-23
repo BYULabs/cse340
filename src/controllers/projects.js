@@ -1,3 +1,4 @@
+import { body, validationResult } from 'express-validator';
 import { 
     getUpcomingProjects, 
     getProjectDetails, 
@@ -11,11 +12,48 @@ import { getAllOrganizations } from '../models/organizations.js';
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
 
 /**
+ * Validation rules for new service project creation.
+ */
+const projectValidation = [
+    body('title')
+        .trim()
+        .notEmpty()
+        .withMessage('Project title is required.')
+        .isLength({ min: 3, max: 200 })
+        .withMessage('Project title must be between 3 and 200 characters.'),
+    
+    body('description')
+        .trim()
+        .notEmpty()
+        .withMessage('Project description is required.')
+        .isLength({ max: 1000 })
+        .withMessage('Project description cannot exceed 1000 characters.'),
+    
+    body('location')
+        .trim()
+        .notEmpty()
+        .withMessage('Location is required.')
+        .isLength({ max: 200 })
+        .withMessage('Location cannot exceed 200 characters.'),
+    
+    body('date')
+        .notEmpty()
+        .withMessage('Project date is required.')
+        .isISO8601()
+        .withMessage('Please provide a valid date format.'),
+    
+    body('organizationId')
+        .notEmpty()
+        .withMessage('Partner organization is required.')
+        .isInt()
+        .withMessage('Organization ID must be a valid integer.')
+];
+
+/**
  * Renders the page showing a limited number of upcoming service projects.
  */
 const showProjectsPage = async (req, res, next) => {
     try {
-        // Fetch only the upcoming projects based on our constant config
         const projects = await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS);
         const title = 'Upcoming Service Projects';
         const page = 'projects';
@@ -34,20 +72,17 @@ const showProjectDetailsPage = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        // 1. Retrieve the service project details
         const project = await getProjectDetails(id);
 
         if (!project) {
             return res.status(404).send('Service project not found.');
         }
 
-        // 2. Fetch the categories assigned to this specific project
         const categories = await getCategoriesByProjectId(id);
 
         const title = project.title;
         const page = 'project-details';
 
-        // 3. Pass both 'project' and 'categories' to your view
         res.render('project', { title, project, categories, page });
     } catch (error) {
         console.error("Error loading project details page:", error);
@@ -58,12 +93,8 @@ const showProjectDetailsPage = async (req, res, next) => {
 /**
  * Renders the form to create a new service project.
  */
-/**
- * Renders the form to create a new service project.
- */
 const showNewProjectForm = async (req, res, next) => {
     try {
-        // Fetch all organizations to populate the dropdown selection
         const organizations = await getAllOrganizations();
         const title = 'Create New Project';
         const page = 'new-project';
@@ -80,6 +111,18 @@ const showNewProjectForm = async (req, res, next) => {
  */
 const processNewProjectForm = async (req, res, next) => {
     try {
+        // Check for validation errors
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // Flash all error messages
+            errors.array().forEach(error => {
+                req.flash('error', error.msg);
+            });
+            // Redirect back to the form page
+            return res.redirect('/new-project');
+        }
+
         // Extract project details from submitted request body
         const { title, description, location, date, organizationId } = req.body;
 
@@ -97,8 +140,9 @@ const processNewProjectForm = async (req, res, next) => {
     }
 };
 
-// Export controller functions
+// Export controller functions & validation rules
 export {
+    projectValidation,
     showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,

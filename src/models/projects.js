@@ -146,11 +146,40 @@ const getProjectsByCategoryId = async (categoryId) => {
     }
 };
 
+/**
+ * Create a new service project in the database.
+ * @param {string} title
+ * @param {string} description
+ * @param {string} location
+ * @param {string|Date} date
+ * @param {number|string} organizationId
+ * @returns {Promise<number|string>} The ID of the newly created project.
+ */
+const createProject = async (title, description, location, date, organizationId) => {
+    const query = `
+        INSERT INTO public.project (title, description, location, project_date, organization_id)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING project_id;
+    `;
+
+    try {
+        const queryParams = [title, description, location, date, organizationId];
+        const result = await db.query(query, queryParams);
+        
+        // Return the ID of the newly inserted project
+        return result.rows[0].project_id;
+    } catch (error) {
+        console.error("Data Layer Error [createProject]:", error.message);
+        throw new Error("Unable to create new project at this time.");
+    }
+};
+
 // Export the model functions
 export { 
     getAllProjects, 
     getProjectsByOrganizationId, 
     getUpcomingProjects, 
     getProjectDetails,
-    getProjectsByCategoryId
+    getProjectsByCategoryId,
+    createProject
 };

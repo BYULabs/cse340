@@ -1,5 +1,11 @@
-import { getUpcomingProjects, getProjectDetails, getProjectsByCategoryId } from '../models/projects.js';
+import { 
+    getUpcomingProjects, 
+    getProjectDetails, 
+    getProjectsByCategoryId,
+    createProject 
+} from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
+import { getAllOrganizations } from '../models/organizations.js';
 
 // Configuration constant for the upcoming projects list
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -7,7 +13,7 @@ const NUMBER_OF_UPCOMING_PROJECTS = 5;
 /**
  * Renders the page showing a limited number of upcoming service projects.
  */
-export const showProjectsPage = async (req, res, next) => {
+const showProjectsPage = async (req, res, next) => {
     try {
         // Fetch only the upcoming projects based on our constant config
         const projects = await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS);
@@ -24,7 +30,7 @@ export const showProjectsPage = async (req, res, next) => {
 /**
  * Renders the details page for a single specific service project, including its categories.
  */
-export const showProjectDetailsPage = async (req, res, next) => {
+const showProjectDetailsPage = async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -47,4 +53,54 @@ export const showProjectDetailsPage = async (req, res, next) => {
         console.error("Error loading project details page:", error);
         res.status(500).send(`Database Error: ${error.message}`);
     }
+};
+
+/**
+ * Renders the form to create a new service project.
+ */
+/**
+ * Renders the form to create a new service project.
+ */
+const showNewProjectForm = async (req, res, next) => {
+    try {
+        // Fetch all organizations to populate the dropdown selection
+        const organizations = await getAllOrganizations();
+        const title = 'Create New Project';
+        const page = 'new-project';
+
+        res.render('new-project', { title, organizations, page });
+    } catch (error) {
+        console.error("Error loading new project form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
+/**
+ * Handles submission of the new service project form.
+ */
+const processNewProjectForm = async (req, res, next) => {
+    try {
+        // Extract project details from submitted request body
+        const { title, description, location, date, organizationId } = req.body;
+
+        // Create the new project in the database using the model function
+        await createProject(title, description, location, date, organizationId);
+
+        // Set a success flash message for the user
+        req.flash('success', 'Project created successfully!');
+
+        // Redirect back to the main service projects page
+        res.redirect('/projects');
+    } catch (error) {
+        console.error("Error processing new project form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
+// Export controller functions
+export {
+    showProjectsPage,
+    showProjectDetailsPage,
+    showNewProjectForm,
+    processNewProjectForm
 };

@@ -33,7 +33,9 @@
                     type="text" 
                     id="name" 
                     name="name" 
-                    placeholder="e.g., Community Food Bank" 
+                    placeholder="e.g., Community Food Bank"
+                    required
+                    maxlength="150"
                 />
             </div>
 
@@ -43,17 +45,20 @@
                     id="description" 
                     name="description" 
                     rows="4" 
-                    placeholder="Describe the organization's mission and work..." 
+                    placeholder="Describe the organization's mission and work..."
+                    required
+                    maxlength="500"
                 ></textarea>
             </div>
 
             <div class="form-group">
                 <label for="contactEmail">Contact Email</label>
                 <input 
-                    type="text" 
+                    type="email" 
                     id="contactEmail" 
                     name="contactEmail" 
-                    placeholder="contact@organization.org" 
+                    placeholder="contact@organization.org"
+                    required
                 />
             </div>
 

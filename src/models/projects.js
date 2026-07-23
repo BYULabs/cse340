@@ -174,6 +174,45 @@ const createProject = async (title, description, location, date, organizationId)
     }
 };
 
+/**
+ * Updates an existing service project in the database.
+ * @param {number|string} id - The ID of the project to update.
+ * @param {string} title - The updated project title.
+ * @param {string} description - The updated project description.
+ * @param {string} location - The updated project location.
+ * @param {string|Date} date - The updated project date.
+ * @param {number|string} organizationId - The ID of the associated organization.
+ * @returns {Promise<object>} The updated project object.
+ */
+const updateProject = async (id, title, description, location, date, organizationId) => {
+    const query = `
+        UPDATE public.project
+        SET 
+            title = $1,
+            description = $2,
+            location = $3,
+            project_date = $4,
+            organization_id = $5
+        WHERE project_id = $6
+        RETURNING project_id;
+    `;
+
+    try {
+        const queryParams = [title, description, location, date, organizationId, id];
+        const result = await db.query(query, queryParams);
+
+        // If no rows were returned/updated, throw an error
+        if (result.rows.length === 0) {
+            throw new Error(`Project with ID ${id} not found.`);
+        }
+
+        return result.rows[0];
+    } catch (error) {
+        console.error("Data Layer Error [updateProject]:", error.message);
+        throw new Error("Unable to update project at this time.");
+    }
+};
+
 // Export the model functions
 export { 
     getAllProjects, 
@@ -181,5 +220,6 @@ export {
     getUpcomingProjects, 
     getProjectDetails,
     getProjectsByCategoryId,
-    createProject
+    createProject,
+    updateProject
 };

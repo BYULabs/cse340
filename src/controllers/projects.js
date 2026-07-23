@@ -3,7 +3,8 @@ import {
     getUpcomingProjects, 
     getProjectDetails, 
     getProjectsByCategoryId,
-    createProject 
+    createProject,
+    updateProject
 } from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
@@ -140,11 +141,75 @@ const processNewProjectForm = async (req, res, next) => {
     }
 };
 
+/**
+ * Renders the form to edit an existing service project.
+ */
+const showEditProjectForm = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Fetch the existing project details and all organizations concurrently
+        const project = await getProjectDetails(id);
+        const organizations = await getAllOrganizations();
+
+        // If the project doesn't exist, send a 404 response
+        if (!project) {
+            return res.status(404).send('Service project not found.');
+        }
+
+        const title = `Edit ${project.title}`;
+        const page = 'edit-project';
+
+        // Render the view, passing project and organization data
+        res.render('edit-project', { title, project, organizations, page });
+    } catch (error) {
+        console.error("Error loading edit project form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
+/**
+ * Handles submission of the edit service project form.
+ */
+const processEditProjectForm = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Check for validation errors
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            errors.array().forEach(error => {
+                req.flash('error', error.msg);
+            });
+            // Redirect back to the edit form if validation fails
+            return res.redirect(`/project/${id}/edit`);
+        }
+
+        // Extract updated project details from the request body
+        const { title, description, location, date, organizationId } = req.body;
+
+        // Update the project in the database using the model function
+        await updateProject(id, title, description, location, date, organizationId);
+
+        // Set a success flash message
+        req.flash('success', 'Project updated successfully!');
+
+        // Redirect back to the project details page after completion
+        res.redirect(`/project/${id}`);
+    } catch (error) {
+        console.error("Error processing edit project form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
 // Export controller functions & validation rules
 export {
     projectValidation,
     showProjectsPage,
     showProjectDetailsPage,
     showNewProjectForm,
-    processNewProjectForm
+    processNewProjectForm,
+    showEditProjectForm,
+    processEditProjectForm
 };

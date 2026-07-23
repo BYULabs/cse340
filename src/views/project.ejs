@@ -19,10 +19,17 @@
                     <span class="project-location">📍 <%= project.location %></span>
                 </div>
             </div>
+
+            <!-- Action Button to Assign Categories -->
+            <div class="project-profile-actions">
+                <a href="/project/<%= project.project_id || project.id %>/assign-categories" class="btn-outline btn-edit-org">
+                    🏷️ Assign Categories
+                </a>
+            </div>
         </div>
         
         <div class="project-profile-body">
-            <!-- New Section: Category Tags -->
+            <!-- Category Tags -->
             <% if (categories && categories.length > 0) { %>
                 <div class="project-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <% categories.forEach(category => { %>

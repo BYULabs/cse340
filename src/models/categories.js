@@ -66,5 +66,56 @@ const getCategoriesByProjectId = async (projectId) => {
     }
 };
 
+/**
+ * Assign a single category to a project in the join table.
+ * @param {number|string} projectId - The ID of the project.
+ * @param {number|string} categoryId - The ID of the category to assign.
+ */
+const assignCategoryToProject = async (projectId, categoryId) => {
+    const query = `
+        INSERT INTO public.project_category (project_id, category_id)
+        VALUES ($1, $2);
+    `;
+
+    try {
+        const queryParams = [projectId, categoryId];
+        await db.query(query, queryParams);
+    } catch (error) {
+        console.error("Data Layer Error [assignCategoryToProject]:", error.message);
+        throw new Error("Unable to assign category to project.");
+    }
+};
+
+/**
+ * Update the category assignments for a given project by removing old ones
+ * and re-assigning the new list of categories.
+ * @param {number|string} projectId - The ID of the project.
+ * @param {Array<number|string>} categoryIds - Array of category IDs to assign.
+ */
+const updateCategoryAssignments = async (projectId, categoryIds) => {
+    const deleteQuery = `
+        DELETE FROM public.project_category
+        WHERE project_id = $1;
+    `;
+
+    try {
+        // Step 1: Remove existing assignments
+        await db.query(deleteQuery, [projectId]);
+
+        // Step 2: Insert new assignments using assignCategoryToProject
+        for (const categoryId of categoryIds) {
+            await assignCategoryToProject(projectId, categoryId);
+        }
+    } catch (error) {
+        console.error("Data Layer Error [updateCategoryAssignments]:", error.message);
+        throw new Error("Unable to update category assignments for this project.");
+    }
+};
+
 // Export the model functions
-export { getAllCategories, getCategoryById, getCategoriesByProjectId };
+export { 
+    getAllCategories, 
+    getCategoryById, 
+    getCategoriesByProjectId,
+    updateCategoryAssignments 
+};

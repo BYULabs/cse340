@@ -1,0 +1,95 @@
+<%- include('partials/header') %>
+
+<main class="form-page-container">
+    <h1><%= title %></h1>
+    <h2>Edit Project</h2>
+    <p>Update the service project details below.</p>
+
+    <section class="form-card">
+        <% 
+            // Format project date to YYYY-MM-DD for standard HTML date picker input
+            let formattedDate = '';
+            if (project && project.date) {
+                const dateObj = new Date(project.date);
+                formattedDate = dateObj.toISOString().split('T')[0];
+            }
+        %>
+
+        <form action="/edit-project/<%= project.project_id || project.id %>" method="POST" class="styled-form">
+            
+            <!-- Project Title Input -->
+            <div class="form-group">
+                <label for="title">Project Title</label>
+                <input 
+                    type="text" 
+                    id="title" 
+                    name="title" 
+                    value="<%= project.title || '' %>" 
+                    required 
+                />
+            </div>
+
+            <!-- Project Description Input -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    rows="4" 
+                    required
+                ><%= project.description || '' %></textarea>
+            </div>
+
+            <!-- Location Input -->
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input 
+                    type="text" 
+                    id="location" 
+                    name="location" 
+                    value="<%= project.location || '' %>" 
+                    required 
+                />
+            </div>
+
+            <!-- Date Picker Input -->
+            <div class="form-group">
+                <label for="date">Project Date</label>
+                <input 
+                    type="date" 
+                    id="date" 
+                    name="date" 
+                    value="<%= formattedDate %>" 
+                    required 
+                />
+            </div>
+
+            <!-- Partner Organization Select Dropdown -->
+            <div class="form-group">
+                <label for="organizationId">Partner Organization</label>
+                <select id="organizationId" name="organizationId" required>
+                    <option value="" disabled>Select an Organization</option>
+                    <% if (organizations && organizations.length > 0) { %>
+                        <% organizations.forEach(org => { %>
+                            <option 
+                                value="<%= org.organization_id %>"
+                                <%= (org.organization_id === project.organization_id) ? 'selected' : '' %>
+                            >
+                                <%= org.name %>
+                            </option>
+                        <% }); %>
+                    <% } %>
+                </select>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn-primary full-width">Save Changes</button>
+                <a href="/project/<%= project.project_id || project.id %>" class="btn-outline full-width">Cancel</a>
+            </div>
+
+        </form>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

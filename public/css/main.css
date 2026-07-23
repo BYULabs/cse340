@@ -1041,6 +1041,7 @@ main.org-detail-container {
         flex-direction: row;
         text-align: left;
         align-items: center;
+        justify-content: space-between;
         gap: 2rem;
     }
 }
@@ -1075,6 +1076,36 @@ main.org-detail-container {
     font-size: 0.95rem;
     font-weight: 500;
     color: var(--brand-600);
+}
+
+/* Action Button Container & Styling */
+.org-profile-actions {
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+    .org-profile-actions {
+        margin-top: 0;
+        margin-left: auto;
+    }
+}
+
+.btn-edit-org {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border-color: var(--gray-400);
+    color: var(--gray-700);
+    white-space: nowrap;
+}
+
+.btn-edit-org:hover {
+    border-color: var(--brand-600);
+    color: var(--brand-700);
+    background-color: var(--brand-50);
 }
 
 /* Card Body (Description) */

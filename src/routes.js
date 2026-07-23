@@ -6,6 +6,8 @@ import {
     showProjectDetailsPage, 
     showNewProjectForm, 
     processNewProjectForm,
+    showEditProjectForm,
+    processEditProjectForm,
     projectValidation 
 } from './controllers/projects.js';
 import { 
@@ -65,5 +67,11 @@ router.get('/new-project', showNewProjectForm);
 
 // Route to handle new project form submission with validation middleware
 router.post('/new-project', projectValidation, processNewProjectForm);
+
+// Route for edit project page
+router.get('/edit-project/:id', showEditProjectForm);
+
+// Route to handle edit project form submission with validation middleware
+router.post('/edit-project/:id', projectValidation, processEditProjectForm);
 
 export default router;

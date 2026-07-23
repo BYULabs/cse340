@@ -1,7 +1,8 @@
 import { 
     getAllOrganizations, 
     getOrganizationDetails, 
-    createOrganization 
+    createOrganization,
+    updateOrganization 
 } from '../models/organizations.js';
 import { getProjectsByOrganizationId } from '../models/projects.js';
 import { body, validationResult } from 'express-validator';
@@ -89,6 +90,34 @@ const showEditOrganizationForm = async (req, res) => {
     res.render('edit-organization', { title, organizationDetails, page });
 };
 
+// Process Edit Organization Form Submission
+const processEditOrganizationForm = async (req, res) => {
+    // Check for validation errors first
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        return res.redirect(`/edit-organization/${req.params.id}`);
+    }
+
+    // Get the organization ID from req.params.id
+    const id = req.params.id;
+
+    // Get the rest of the data from req.body
+    const { name, description, contactEmail, logoFilename } = req.body;
+
+    // Call updateOrganization model function
+    await updateOrganization(id, name, description, contactEmail, logoFilename);
+
+    // Set success flash message
+    req.flash('success', 'Organization updated successfully!');
+
+    // Redirect user back to the organization details page
+    res.redirect(`/organization/${id}`);
+};
+
 // Export controller functions
 export {
     showOrganizationsPage,
@@ -96,5 +125,6 @@ export {
     showNewOrganizationForm,
     processNewOrganizationForm,
     showEditOrganizationForm,
+    processEditOrganizationForm,
     organizationValidation
 };

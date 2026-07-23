@@ -1,6 +1,8 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import session from 'express-session';
+import flash from 'connect-flash';
 import { testConnection } from './src/models/db.js';
 import router from './src/routes.js';
 
@@ -22,6 +24,23 @@ const app = express();
 // Allow Express to receive and process common POST data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Configure Session Middleware (Required by connect-flash) <-- ADD THIS
+app.use(session({
+    secret: 'cse340-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+}));
+
+// Configure Flash Middleware <-- ADD THIS
+app.use(flash());
+
+// Pass flash messages to local variables for views <-- ADD THIS
+app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+});
 
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
@@ -69,7 +88,7 @@ app.use((err, req, res, next) => {
     // Prepare data for the template
     const context = {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
-        page: 'error', // <-- ADD THIS LINE RIGHT HERE!
+        page: 'error',
         error: err.message,
         stack: err.stack
     };

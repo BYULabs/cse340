@@ -7,7 +7,6 @@ import { getProjectsByOrganizationId } from '../models/projects.js';
 import { body, validationResult } from 'express-validator';
 
 // Define validation and sanitization rules for organization form
-// Define validation rules for organization form
 const organizationValidation = [
     body('name')
         .trim()
@@ -80,11 +79,22 @@ const processNewOrganizationForm = async (req, res) => {
     res.redirect(`/organization/${organizationId}`);
 };
 
+// Show Edit Organization Form
+const showEditOrganizationForm = async (req, res) => {
+    const organizationId = req.params.id;
+    const organizationDetails = await getOrganizationDetails(organizationId);
+    const title = 'Edit Organization';
+    const page = 'organizations';
+
+    res.render('edit-organization', { title, organizationDetails, page });
+};
+
 // Export controller functions
 export {
     showOrganizationsPage,
     showOrganizationDetailsPage,
     showNewOrganizationForm,
     processNewOrganizationForm,
+    showEditOrganizationForm,
     organizationValidation
 };

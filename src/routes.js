@@ -10,6 +10,7 @@ import {
     processNewOrganizationForm,
     showOrganizationsPage,
     showEditOrganizationForm,
+    processEditOrganizationForm,
     organizationValidation
 } from './controllers/organizations.js';
 
@@ -40,5 +41,8 @@ router.post('/new-organization', organizationValidation, processNewOrganizationF
 
 // Route for edit organization page
 router.get('/edit-organization/:id', showEditOrganizationForm);
+
+// Route to handle edit organization form submission
+router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
 
 export default router;

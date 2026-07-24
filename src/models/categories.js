@@ -108,10 +108,54 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     }
 };
 
+/**
+ * Inserts a new category record and returns its generated ID.
+ * @param {string} name - Category display name.
+ * @returns {Promise<number|string>} Generated ID of the new category.
+ */
+const createCategory = async (name) => {
+    const query = `
+        INSERT INTO public.category (name)
+        VALUES ($1)
+        RETURNING category_id;
+    `;
+
+    try {
+        const result = await db.query(query, [name]);
+        return result.rows[0].category_id;
+    } catch (error) {
+        console.error("Data Layer Error [createCategory]:", error.message);
+        throw new Error("Unable to create category at this time.");
+    }
+};
+
+/**
+ * Updates an existing category record.
+ * @param {number|string} id - Database ID of the target category.
+ * @param {string} name - Updated category name.
+ * @returns {Promise<Object>} Database query execution result.
+ */
+const updateCategory = async (id, name) => {
+    const query = `
+        UPDATE public.category
+        SET name = $1
+        WHERE category_id = $2;
+    `;
+
+    try {
+        return await db.query(query, [name, id]);
+    } catch (error) {
+        console.error("Data Layer Error [updateCategory]:", error.message);
+        throw new Error("Unable to update category at this time.");
+    }
+};
+
 export { 
     getAllCategories, 
     getCategoryById, 
     getCategoriesByProjectId,
     assignCategoryToProject,
-    updateCategoryAssignments 
+    updateCategoryAssignments,
+    createCategory,
+    updateCategory 
 };

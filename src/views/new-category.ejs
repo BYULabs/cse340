@@ -1,0 +1,51 @@
+<%- include('partials/header') %>
+
+<main class="form-page-container">
+    <h1><%= title %></h1>
+    <p class="section-lead">Create a new service sector category to help organize community projects.</p>
+
+    <!-- FLASH MESSAGES -->
+    <% if (messages && messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul class="alert-list">
+                <% messages.error.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (messages && messages.success && messages.success.length > 0) { %>
+        <div class="alert alert-success">
+            <ul class="alert-list">
+                <% messages.success.forEach(function(msg) { %>
+                    <li><%= msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <div class="form-card">
+        <form action="/new-category" method="POST" class="styled-form">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    placeholder="e.g., Environmental Conservation"
+                    required
+                    minlength="2"
+                    maxlength="100"
+                />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary full-width">Create Category</button>
+                <a href="/categories" class="btn-outline full-width">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

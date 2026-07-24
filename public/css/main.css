@@ -1570,6 +1570,94 @@ main.form-page-container {
 }
 
 /* ==========================================================================
+   Category Directory & Actions Extensions
+   ========================================================================== */
+
+/* Category Detail Header with Inline Edit Button */
+.category-title-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: -0.5rem;
+}
+
+@media (max-width: 480px) {
+    .category-title-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Category card flex layout to support internal action link positioning */
+main ul.category-grid li.category-card {
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+    text-decoration: none;
+    text-align: center;
+}
+
+.category-card-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy-900);
+}
+
+.category-card-actions {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--gray-50);
+    width: 100%;
+}
+
+.category-action-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--brand-600);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.category-action-link:hover {
+    color: var(--brand-700);
+    text-decoration: underline;
+}
+
+/* Bottom CTA section matching the organizations page styling */
+.categories-bottom-action {
+    margin-top: 3rem;
+    padding: 2rem;
+    background-color: var(--white);
+    border: 1px dashed var(--gray-100);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 64rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.categories-bottom-action p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+@media (min-width: 640px) {
+    .categories-bottom-action {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1.5rem 2.5rem;
+    }
+}
+
+/* ==========================================================================
    Footer Layout Architecture
    ========================================================================== */
 .site-footer {

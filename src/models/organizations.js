@@ -1,5 +1,9 @@
 import db from './db.js';
 
+/**
+ * Retrieve all partner organizations from the database.
+ * @returns {Promise<Array<Object>>} Resolved array of organization record objects.
+ */
 const getAllOrganizations = async () => {
     const query = `
         SELECT organization_id, name, description, contact_email, logo_filename
@@ -11,82 +15,92 @@ const getAllOrganizations = async () => {
         return result.rows;
     } catch (error) {
         console.error("Data Layer Error [getAllOrganizations]:", error.message);
-        
-        throw new Error("Unable to retrieve organizations at this time. Please try again later.");
+        throw new Error("Unable to retrieve organizations at this time.");
     }
 };
 
+/**
+ * Retrieve a single organization by its primary key.
+ * @param {number|string} organizationId - Database ID of the target organization.
+ * @returns {Promise<Object|null>} Resolved organization record or null if not found.
+ */
 const getOrganizationDetails = async (organizationId) => {
     const query = `
-      SELECT
-        organization_id,
-        name,
-        description,
-        contact_email,
-        logo_filename
-      FROM organization
-      WHERE organization_id = $1;
+        SELECT organization_id, name, description, contact_email, logo_filename
+        FROM public.organization
+        WHERE organization_id = $1;
     `;
 
-    const queryParams = [organizationId];
-    const result = await db.query(query, queryParams);
-
-    // Return the first row of the result set, or null if no rows are found
-    return result.rows.length > 0 ? result.rows[0] : null;
+    try {
+        const result = await db.query(query, [organizationId]);
+        return result.rows[0] || null;
+    } catch (error) {
+        console.error("Data Layer Error [getOrganizationDetails]:", error.message);
+        throw new Error("Unable to retrieve organization details at this time.");
+    }
 };
 
 /**
- * Creates a new organization in the database.
- * @param {string} name - The name of the organization.
- * @param {string} description - A description of the organization.
- * @param {string} contactEmail - The contact email for the organization.
- * @param {string} logoFilename - The filename of the organization's logo.
- * @returns {string} The id of the newly created organization record.
+ * Inserts a new organization record and returns its generated ID.
+ * @param {string} name - Organization name.
+ * @param {string} description - Brief summary of the organization.
+ * @param {string} contactEmail - Primary email contact.
+ * @param {string} logoFilename - Associated image asset filename.
+ * @returns {Promise<number|string>} Generated ID of the new organization.
  */
 const createOrganization = async (name, description, contactEmail, logoFilename) => {
     const query = `
-      INSERT INTO organization (name, description, contact_email, logo_filename)
-      VALUES ($1, $2, $3, $4)
-      RETURNING organization_id
+        INSERT INTO public.organization (name, description, contact_email, logo_filename)
+        VALUES ($1, $2, $3, $4)
+        RETURNING organization_id;
     `;
 
-    const queryParams = [name, description, contactEmail, logoFilename];
-    const result = await db.query(query, queryParams);
+    try {
+        const result = await db.query(query, [name, description, contactEmail, logoFilename]);
 
-    if (result.rows.length === 0) {
-        throw new Error('Failed to create organization');
+        if (result.rows.length === 0) {
+            throw new Error('No record returned post-insertion.');
+        }
+
+        // Conditional debug output for database auditing during development
+        if (process.env.ENABLE_SQL_LOGGING === 'true') {
+            console.log('Created new organization with ID:', result.rows[0].organization_id);
+        }
+
+        return result.rows[0].organization_id;
+    } catch (error) {
+        console.error("Data Layer Error [createOrganization]:", error.message);
+        throw new Error("Unable to create organization at this time.");
     }
-
-    if (process.env.ENABLE_SQL_LOGGING === 'true') {
-        console.log('Created new organization with ID:', result.rows[0].organization_id);
-    }
-
-    return result.rows[0].organization_id;
 };
 
 /**
- * Updates an existing organization in the database.
- * @param {number|string} id - The ID of the organization to update.
- * @param {string} name - The updated name.
- * @param {string} description - The updated description.
- * @param {string} contactEmail - The updated contact email.
- * @param {string} logoFilename - The updated logo filename.
+ * Updates details for an existing organization record.
+ * @param {number|string} id - Database ID of the target organization.
+ * @param {string} name - Updated organization name.
+ * @param {string} description - Updated summary.
+ * @param {string} contactEmail - Updated email.
+ * @param {string} logoFilename - Updated image asset filename.
+ * @returns {Promise<Object>} Database query execution result.
  */
 const updateOrganization = async (id, name, description, contactEmail, logoFilename) => {
     const query = `
-        UPDATE organization
+        UPDATE public.organization
         SET name = $1,
             description = $2,
             contact_email = $3,
             logo_filename = $4
-        WHERE organization_id = $5
+        WHERE organization_id = $5;
     `;
 
-    const queryParams = [name, description, contactEmail, logoFilename, id];
-    return await db.query(query, queryParams);
+    try {
+        return await db.query(query, [name, description, contactEmail, logoFilename, id]);
+    } catch (error) {
+        console.error("Data Layer Error [updateOrganization]:", error.message);
+        throw new Error("Unable to update organization details at this time.");
+    }
 };
 
-// Export the model functions
 export { 
     getAllOrganizations, 
     getOrganizationDetails, 

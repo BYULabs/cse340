@@ -27,51 +27,42 @@ import {
     organizationValidation
 } from './controllers/organizations.js';
 
+/**
+ * Application primary route definitions.
+ */
 const router = express.Router();
+
+// --- Core Landing Views ---
 
 router.get('/', showHomePage);
 router.get('/organizations', showOrganizationsPage);
 router.get('/projects', showProjectsPage);
 router.get('/categories', showCategoriesPage);
 
-// Route for organization details page
+// --- Organization Routes ---
+
 router.get('/organization/:id', showOrganizationDetailsPage);
+router.get('/new-organization', showNewOrganizationForm);
+router.post('/new-organization', organizationValidation, processNewOrganizationForm);
+router.get('/edit-organization/:id', showEditOrganizationForm);
+router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
 
-// Route for project details page
+// --- Project Routes ---
+
 router.get('/project/:id', showProjectDetailsPage);
+router.get('/new-project', showNewProjectForm);
+router.post('/new-project', projectValidation, processNewProjectForm);
+router.get('/edit-project/:id', showEditProjectForm);
+router.post('/edit-project/:id', projectValidation, processEditProjectForm);
 
-// Route for category details page
+// --- Category Routes & Assignments ---
+
 router.get('/category/:id', showCategoryDetailsPage);
-
-// Routes for assigning categories to a project
 router.get('/project/:projectId/assign-categories', showAssignCategoriesForm);
 router.post('/project/:projectId/assign-categories', processAssignCategoriesForm);
 
-// error-handling routes
+// --- System & Testing Utilities ---
+
 router.get('/test-error', testErrorPage);
-
-// Route for new organization page
-router.get('/new-organization', showNewOrganizationForm);
-
-// Route to handle new organization form submission
-router.post('/new-organization', organizationValidation, processNewOrganizationForm);
-
-// Route for edit organization page
-router.get('/edit-organization/:id', showEditOrganizationForm);
-
-// Route to handle edit organization form submission
-router.post('/edit-organization/:id', organizationValidation, processEditOrganizationForm);
-
-// Route for new project page
-router.get('/new-project', showNewProjectForm);
-
-// Route to handle new project form submission with validation middleware
-router.post('/new-project', projectValidation, processNewProjectForm);
-
-// Route for edit project page
-router.get('/edit-project/:id', showEditProjectForm);
-
-// Route to handle edit project form submission with validation middleware
-router.post('/edit-project/:id', projectValidation, processEditProjectForm);
 
 export default router;

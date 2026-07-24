@@ -6,10 +6,7 @@ import flash from 'connect-flash';
 import { testConnection } from './src/models/db.js';
 import router from './src/routes.js';
 
-// Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
-
-// Define the port number the server will listen on
 const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,92 +14,99 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-/**
-  * Configure Express middleware
-  */
+// --- Core Middleware & Assets ---
 
-// Allow Express to receive and process common POST data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Configure Session Middleware (Required by connect-flash) <-- ADD THIS
+// Session secret fallback intended for local development; override via ENV in production
 app.use(session({
-    secret: 'cse340-secret-key',
+    secret: process.env.SESSION_SECRET || 'cse340-secret-key',
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60000 }
 }));
 
-// Configure Flash Middleware <-- ADD THIS
 app.use(flash());
 
-// Pass flash messages to local variables for views <-- ADD THIS
+/**
+ * Exposes flash notification messages to EJS templates via res.locals.
+ */
 app.use((req, res, next) => {
     res.locals.messages = req.flash();
     next();
 });
 
-// Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set EJS as the templating engine
-app.set('view engine', 'ejs');
+// --- View Engine Setup ---
 
-// Tell Express where to find your templates
+app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
-// Middleware to log all incoming requests
+// --- Custom Middleware ---
+
+/**
+ * Logs HTTP request method and URL in development mode only.
+ */
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
     }
-    next(); // Pass control to the next middleware or route
+    next();
 });
 
-// Middleware to make NODE_ENV available to all templates
+/**
+ * Exposes application environment state to all view render contexts.
+ */
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });
 
-// Use the imported router to handle routes
+// --- Application Routes ---
+
 app.use(router);
 
-// Catch-all route for 404 errors
+// --- Error Handling Pipeline ---
+
+/**
+ * Catches unhandled routes and forwards a 404 error to the central handler.
+ */
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
     err.status = 404;
     next(err);
 });
 
-// Global error handler
+/**
+ * Centralized application error handler for rendering 404 and 500 error pages.
+ */
 app.use((err, req, res, next) => {
-    // Log error details for debugging
     console.error('Error occurred:', err.message);
-    console.error('Stack trace:', err.stack);
+    if (NODE_ENV === 'development') {
+        console.error('Stack trace:', err.stack);
+    }
     
-    // Determine status and template
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
     
-    // Prepare data for the template
-    const context = {
+    res.status(status).render(`errors/${template}`, {
         title: status === 404 ? 'Page Not Found' : 'Server Error',
         page: 'error',
         error: err.message,
-        stack: err.stack
-    };
-    
-    // Render the appropriate error template
-    res.status(status).render(`errors/${template}`, context);
+        stack: NODE_ENV === 'development' ? err.stack : null
+    });
 });
 
+// --- Server Initialization ---
+
 app.listen(PORT, async () => {
-  try {
-    await testConnection();
-    console.log(`Server is running at http://127.0.0.1:${PORT}`);
-    console.log(`Environment: ${NODE_ENV}`);
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-  }
+    try {
+        await testConnection();
+        console.log(`Server running at http://127.0.0.1:${PORT}`);
+        console.log(`Environment: ${NODE_ENV}`);
+    } catch (error) {
+        console.error('Error connecting to the database:', error);
+    }
 });

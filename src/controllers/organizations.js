@@ -7,7 +7,9 @@ import {
 import { getProjectsByOrganizationId } from '../models/projects.js';
 import { body, validationResult } from 'express-validator';
 
-// Define validation and sanitization rules for organization form
+/**
+ * Validation schema for creating/updating an organization.
+ */
 const organizationValidation = [
     body('name')
         .trim()
@@ -29,96 +31,136 @@ const organizationValidation = [
         .withMessage('Please provide a valid email address')
 ];
 
+/**
+ * Renders the primary landing view listing all partner organizations.
+ */
 const showOrganizationsPage = async (req, res) => {
     try {
         const organizations = await getAllOrganizations();
-        const title = 'Our Partner Organizations';
-        const page = 'organizations';
-
-        res.render('organizations', { title, organizations, page });
+        res.render('organizations', { 
+            title: 'Our Partner Organizations', 
+            organizations, 
+            page: 'organizations' 
+        });
     } catch (error) {
         console.error("Error loading organizations page:", error);
         res.status(500).send(`Database Error: ${error.message}`);
     }
 };
 
+/**
+ * Renders detail view for a single organization and its associated projects.
+ */
 const showOrganizationDetailsPage = async (req, res) => {
-    const organizationId = req.params.id;
-    const organizationDetails = await getOrganizationDetails(organizationId);
-    const projects = await getProjectsByOrganizationId(organizationId);
-    const title = 'Organization Details';
-    const page = 'organizations';
+    try {
+        const organizationId = req.params.id;
 
-    res.render('organization', { title, organizationDetails, projects, page });
+        // Fetch organization details and related projects concurrently to reduce response latency
+        const [organizationDetails, projects] = await Promise.all([
+            getOrganizationDetails(organizationId),
+            getProjectsByOrganizationId(organizationId)
+        ]);
+
+        if (!organizationDetails) {
+            return res.status(404).send('Organization not found.');
+        }
+
+        res.render('organization', { 
+            title: 'Organization Details', 
+            organizationDetails, 
+            projects, 
+            page: 'organizations' 
+        });
+    } catch (error) {
+        console.error("Error loading organization details page:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
 };
 
+/**
+ * Renders the form to register a new partner organization.
+ */
 const showNewOrganizationForm = async (req, res) => {
-    const title = 'Add New Organization';
-    const page = 'organizations'; // Highlight the "Organizations" link in header
-
-    res.render('new-organization', { title, page });
+    res.render('new-organization', { 
+        title: 'Add New Organization', 
+        page: 'organizations' 
+    });
 };
 
+/**
+ * Handles creation of a new organization after validation passes.
+ */
 const processNewOrganizationForm = async (req, res) => {
-    // Check for validation errors
-    const results = validationResult(req);
-    if (!results.isEmpty()) {
-        // Validation failed - loop through errors
-        results.array().forEach((error) => {
-            req.flash('error', error.msg);
-        });
+    try {
+        const results = validationResult(req);
 
-        // Redirect back to the new organization form
-        return res.redirect('/new-organization');
+        if (!results.isEmpty()) {
+            results.array().forEach(error => req.flash('error', error.msg));
+            return res.redirect('/new-organization');
+        }
+
+        const { name, description, contactEmail } = req.body;
+
+        // Default to system placeholder until image upload support is implemented
+        const logoFilename = 'placeholder-logo.png'; 
+
+        const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
+
+        req.flash('success', 'Organization added successfully!');
+        res.redirect(`/organization/${organizationId}`);
+    } catch (error) {
+        console.error("Error processing new organization form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
     }
-
-    const { name, description, contactEmail } = req.body;
-    const logoFilename = 'placeholder-logo.png'; // Use the placeholder logo for all new organizations    
-
-    const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
-    req.flash('success', 'Organization added successfully!');
-    res.redirect(`/organization/${organizationId}`);
 };
 
-// Show Edit Organization Form
+/**
+ * Renders edit form pre-filled with existing organization details.
+ */
 const showEditOrganizationForm = async (req, res) => {
-    const organizationId = req.params.id;
-    const organizationDetails = await getOrganizationDetails(organizationId);
-    const title = 'Edit Organization';
-    const page = 'organizations';
+    try {
+        const organizationId = req.params.id;
+        const organizationDetails = await getOrganizationDetails(organizationId);
 
-    res.render('edit-organization', { title, organizationDetails, page });
-};
+        if (!organizationDetails) {
+            return res.status(404).send('Organization not found.');
+        }
 
-// Process Edit Organization Form Submission
-const processEditOrganizationForm = async (req, res) => {
-    // Check for validation errors first
-    const results = validationResult(req);
-    if (!results.isEmpty()) {
-        results.array().forEach((error) => {
-            req.flash('error', error.msg);
+        res.render('edit-organization', { 
+            title: 'Edit Organization', 
+            organizationDetails, 
+            page: 'organizations' 
         });
-
-        return res.redirect(`/edit-organization/${req.params.id}`);
+    } catch (error) {
+        console.error("Error loading edit organization form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
     }
-
-    // Get the organization ID from req.params.id
-    const id = req.params.id;
-
-    // Get the rest of the data from req.body
-    const { name, description, contactEmail, logoFilename } = req.body;
-
-    // Call updateOrganization model function
-    await updateOrganization(id, name, description, contactEmail, logoFilename);
-
-    // Set success flash message
-    req.flash('success', 'Organization updated successfully!');
-
-    // Redirect user back to the organization details page
-    res.redirect(`/organization/${id}`);
 };
 
-// Export controller functions
+/**
+ * Handles updating an existing organization after validation passes.
+ */
+const processEditOrganizationForm = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const results = validationResult(req);
+
+        if (!results.isEmpty()) {
+            results.array().forEach(error => req.flash('error', error.msg));
+            return res.redirect(`/edit-organization/${id}`);
+        }
+
+        const { name, description, contactEmail, logoFilename } = req.body;
+        await updateOrganization(id, name, description, contactEmail, logoFilename);
+
+        req.flash('success', 'Organization updated successfully!');
+        res.redirect(`/organization/${id}`);
+    } catch (error) {
+        console.error("Error processing edit organization form:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
 export {
     showOrganizationsPage,
     showOrganizationDetailsPage,

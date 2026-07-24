@@ -1,8 +1,8 @@
-import db from './db.js'
+import db from './db.js';
 
 /**
- * Retrieve all service categories from the database.
- * @returns {Promise<Array<Object>>} A promise that resolves to an array of category objects.
+ * Retrieve all service categories ordered by name.
+ * @returns {Promise<Array<Object>>} Resolved array of category record objects.
  */
 const getAllCategories = async () => {
     const query = `
@@ -15,14 +15,14 @@ const getAllCategories = async () => {
         return result.rows;
     } catch (error) {
         console.error("Data Layer Error [getAllCategories]:", error.message);
-        
         throw new Error("Unable to retrieve categories at this time.");
     }
-}
+};
 
 /**
- * Retrieve a single category by its ID.
- * @param {number|string} categoryId - The ID of the category.
+ * Retrieve a single category by its primary key.
+ * @param {number|string} categoryId - Database ID of the target category.
+ * @returns {Promise<Object|null>} Resolved category record or null if not found.
  */
 const getCategoryById = async (categoryId) => {
     const query = `
@@ -32,11 +32,8 @@ const getCategoryById = async (categoryId) => {
     `;
 
     try {
-        const queryParams = [categoryId];
-        const result = await db.query(query, queryParams);
-        
-        // Return the category object if found, otherwise return null
-        return result.rows.length > 0 ? result.rows[0] : null;
+        const result = await db.query(query, [categoryId]);
+        return result.rows[0] || null;
     } catch (error) {
         console.error("Data Layer Error [getCategoryById]:", error.message);
         throw new Error("Unable to retrieve category details at this time.");
@@ -44,8 +41,9 @@ const getCategoryById = async (categoryId) => {
 };
 
 /**
- * Retrieve all categories mapped to a specific service project.
- * @param {number|string} projectId - The ID of the project.
+ * Retrieve all categories linked to a specific service project.
+ * @param {number|string} projectId - Database ID of the target project.
+ * @returns {Promise<Array<Object>>} Resolved list of assigned categories.
  */
 const getCategoriesByProjectId = async (projectId) => {
     const query = `
@@ -57,8 +55,7 @@ const getCategoriesByProjectId = async (projectId) => {
     `;
 
     try {
-        const queryParams = [projectId];
-        const result = await db.query(query, queryParams);
+        const result = await db.query(query, [projectId]);
         return result.rows;
     } catch (error) {
         console.error("Data Layer Error [getCategoriesByProjectId]:", error.message);
@@ -67,9 +64,10 @@ const getCategoriesByProjectId = async (projectId) => {
 };
 
 /**
- * Assign a single category to a project in the join table.
- * @param {number|string} projectId - The ID of the project.
- * @param {number|string} categoryId - The ID of the category to assign.
+ * Creates a single project-to-category mapping entry in the join table.
+ * @param {number|string} projectId - Target project ID.
+ * @param {number|string} categoryId - Category ID to associate.
+ * @returns {Promise<void>}
  */
 const assignCategoryToProject = async (projectId, categoryId) => {
     const query = `
@@ -78,8 +76,7 @@ const assignCategoryToProject = async (projectId, categoryId) => {
     `;
 
     try {
-        const queryParams = [projectId, categoryId];
-        await db.query(query, queryParams);
+        await db.query(query, [projectId, categoryId]);
     } catch (error) {
         console.error("Data Layer Error [assignCategoryToProject]:", error.message);
         throw new Error("Unable to assign category to project.");
@@ -87,10 +84,10 @@ const assignCategoryToProject = async (projectId, categoryId) => {
 };
 
 /**
- * Update the category assignments for a given project by removing old ones
- * and re-assigning the new list of categories.
- * @param {number|string} projectId - The ID of the project.
- * @param {Array<number|string>} categoryIds - Array of category IDs to assign.
+ * Replaces all current category associations for a project with a new set of IDs.
+ * @param {number|string} projectId - Target project ID.
+ * @param {Array<number|string>} categoryIds - List of new category IDs to assign.
+ * @returns {Promise<void>}
  */
 const updateCategoryAssignments = async (projectId, categoryIds) => {
     const deleteQuery = `
@@ -99,10 +96,9 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     `;
 
     try {
-        // Step 1: Remove existing assignments
         await db.query(deleteQuery, [projectId]);
 
-        // Step 2: Insert new assignments using assignCategoryToProject
+        // Sequential insert loop utilized for low-volume tag arrays; consider bulk INSERT for high scale
         for (const categoryId of categoryIds) {
             await assignCategoryToProject(projectId, categoryId);
         }
@@ -112,10 +108,10 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     }
 };
 
-// Export the model functions
 export { 
     getAllCategories, 
     getCategoryById, 
     getCategoriesByProjectId,
+    assignCategoryToProject,
     updateCategoryAssignments 
 };

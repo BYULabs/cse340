@@ -6,13 +6,17 @@ import {
 } from '../models/categories.js';
 import { getProjectsByCategoryId, getProjectDetails } from '../models/projects.js';
 
+/**
+ * Renders the primary list view of all service categories.
+ */
 const showCategoriesPage = async (req, res) => {
     try {
         const categories = await getAllCategories();
-        const title = 'Service Categories';
-        const page = 'categories';
-
-        res.render('categories', { title, categories, page });
+        res.render('categories', { 
+            title: 'Service Categories', 
+            categories, 
+            page: 'categories' 
+        });
     } catch (error) {
         console.error("Error loading categories page:", error);
         res.status(500).send(`Database Error: ${error.message}`);
@@ -20,29 +24,25 @@ const showCategoriesPage = async (req, res) => {
 };
 
 /**
- * Renders the details page for a single category, displaying all related service projects.
+ * Renders detail view for a specific category along with its tagged projects.
  */
 const showCategoryDetailsPage = async (req, res, next) => {
     try {
-        // Extract the category ID from the URL parameters (e.g., /categories/:id)
         const { id } = req.params;
-
-        // 1. Fetch the single category information
         const category = await getCategoryById(id);
 
-        // Handle case where category ID doesn't exist
         if (!category) {
             return res.status(404).send('Category not found.');
         }
 
-        // 2. Fetch all service projects tagged with this category
         const projects = await getProjectsByCategoryId(id);
 
-        const title = `${category.name} Projects`; // Dynamic title based on category name
-        const page = 'categories'; // Keeps the navigation active context on categories
-
-        // 3. Render your category details view template (e.g., category.ejs)
-        res.render('category', { title, category, projects, page });
+        res.render('category', { 
+            title: `${category.name} Projects`, 
+            category, 
+            projects, 
+            page: 'categories' 
+        });
     } catch (error) {
         console.error("Error loading category details page:", error);
         res.status(500).send(`Database Error: ${error.message}`);
@@ -50,26 +50,29 @@ const showCategoryDetailsPage = async (req, res, next) => {
 };
 
 /**
- * Displays the form to assign categories to a project.
+ * Renders category management form for a project with both available and assigned categories.
  */
-// ✅ FIXED
 const showAssignCategoriesForm = async (req, res, next) => {
     try {
         const { projectId } = req.params;
 
-        const project = await getProjectDetails(projectId);
-        const allCategories = await getAllCategories();
-        const assignedCategories = await getCategoriesByProjectId(projectId);
+        // Fetch independent project and category data concurrently to reduce database wait times
+        const [project, allCategories, assignedCategories] = await Promise.all([
+            getProjectDetails(projectId),
+            getAllCategories(),
+            getCategoriesByProjectId(projectId)
+        ]);
 
-        const title = 'Assign Categories to Project';
-        const page = 'categories'; // Add page variable
+        if (!project) {
+            return res.status(404).send('Project not found.');
+        }
 
         res.render('assign-categories', {
-            title,
+            title: 'Assign Categories to Project',
             project,
             allCategories,
             assignedCategories,
-            page // Pass page here
+            page: 'categories'
         });
     } catch (error) {
         console.error("Error displaying assign categories form:", error);
@@ -78,27 +81,22 @@ const showAssignCategoriesForm = async (req, res, next) => {
 };
 
 /**
- * Processes the assignment of categories to a project.
+ * Handles updating category assignments for a given project.
  */
 const processAssignCategoriesForm = async (req, res, next) => {
     try {
         const { projectId } = req.params;
-        
-        // Handle case where no categories are selected (falls back to an empty array)
-        const categories = req.body.categories || [];
+        const rawCategories = req.body.categories || [];
 
-        // Ensure categoryIds is an array (convert single value to array if necessary)
-        const categoryIds = Array.isArray(categories) ? categories : [categories];
+        // Normalize express body output: unselected -> [], single selection -> array, multiple -> array
+        const categoryIds = Array.isArray(rawCategories) ? rawCategories : [rawCategories];
 
-        // Update the category assignments in the database
         await updateCategoryAssignments(projectId, categoryIds);
 
-        // Set flash message (assuming express-flash or req.flash middleware is configured)
         if (req.flash) {
             req.flash('success', 'Categories updated successfully.');
         }
 
-        // Redirect back to project details page
         res.redirect(`/project/${projectId}`);
     } catch (error) {
         console.error("Error processing category assignments:", error);
@@ -106,7 +104,6 @@ const processAssignCategoriesForm = async (req, res, next) => {
     }
 };
 
-// Export controller functions
 export {
     showCategoriesPage,
     showCategoryDetailsPage,

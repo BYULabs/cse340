@@ -1,7 +1,8 @@
-import db from './db.js'
+import db from './db.js';
 
 /**
- * Retrieve all service projects from the database, including organization names.
+ * Retrieve all service projects along with their parent organization names.
+ * @returns {Promise<Array<Object>>} Resolved list of all project records.
  */
 const getAllProjects = async () => {
     const query = `
@@ -24,10 +25,12 @@ const getAllProjects = async () => {
         console.error("Data Layer Error [getAllProjects]:", error.message);
         throw new Error("Unable to retrieve project listings at this time.");
     }
-}
+};
 
 /**
  * Retrieve projects associated with a specific organization.
+ * @param {number|string} organizationId - Database ID of the target organization.
+ * @returns {Promise<Array<Object>>} Resolved list of matching project records.
  */
 const getProjectsByOrganizationId = async (organizationId) => {
     const query = `
@@ -38,14 +41,13 @@ const getProjectsByOrganizationId = async (organizationId) => {
             description,
             location,
             project_date
-        FROM project
+        FROM public.project
         WHERE organization_id = $1
         ORDER BY project_date;
     `;
-    
+
     try {
-        const queryParams = [organizationId];
-        const result = await db.query(query, queryParams);
+        const result = await db.query(query, [organizationId]);
         return result.rows;
     } catch (error) {
         console.error("Data Layer Error [getProjectsByOrganizationId]:", error.message);
@@ -54,8 +56,9 @@ const getProjectsByOrganizationId = async (organizationId) => {
 };
 
 /**
- * Retrieve a specific number of upcoming service projects starting from today.
- * @param {number} numberOfProjects - The maximum number of projects to retrieve.
+ * Retrieve a limited set of upcoming service projects starting from today.
+ * @param {number} numberOfProjects - Maximum number of records to return.
+ * @returns {Promise<Array<Object>>} Resolved list of upcoming projects.
  */
 const getUpcomingProjects = async (numberOfProjects) => {
     const query = `
@@ -75,18 +78,18 @@ const getUpcomingProjects = async (numberOfProjects) => {
     `;
 
     try {
-        const queryParams = [numberOfProjects];
-        const result = await db.query(query, queryParams);
+        const result = await db.query(query, [numberOfProjects]);
         return result.rows;
     } catch (error) {
         console.error("Data Layer Error [getUpcomingProjects]:", error.message);
         throw new Error("Unable to retrieve upcoming projects at this time.");
     }
-}
+};
 
 /**
- * Retrieve the details of a single service project by its ID.
- * @param {number|string} id - The ID of the service project.
+ * Retrieve a single service project by its primary key.
+ * @param {number|string} id - Database ID of the target project.
+ * @returns {Promise<Object|null>} Resolved project object or null if not found.
  */
 const getProjectDetails = async (id) => {
     const query = `
@@ -104,11 +107,8 @@ const getProjectDetails = async (id) => {
     `;
 
     try {
-        const queryParams = [id];
-        const result = await db.query(query, queryParams);
-
-        // Return the project object if found, otherwise return null
-        return result.rows.length > 0 ? result.rows[0] : null;
+        const result = await db.query(query, [id]);
+        return result.rows[0] || null;
     } catch (error) {
         console.error("Data Layer Error [getProjectDetails]:", error.message);
         throw new Error("Unable to retrieve project details at this time.");
@@ -117,7 +117,8 @@ const getProjectDetails = async (id) => {
 
 /**
  * Retrieve all service projects associated with a given category.
- * @param {number|string} categoryId - The ID of the category.
+ * @param {number|string} categoryId - Database ID of the target category.
+ * @returns {Promise<Array<Object>>} Resolved list of category-tagged projects.
  */
 const getProjectsByCategoryId = async (categoryId) => {
     const query = `
@@ -137,8 +138,7 @@ const getProjectsByCategoryId = async (categoryId) => {
     `;
 
     try {
-        const queryParams = [categoryId];
-        const result = await db.query(query, queryParams);
+        const result = await db.query(query, [categoryId]);
         return result.rows;
     } catch (error) {
         console.error("Data Layer Error [getProjectsByCategoryId]:", error.message);
@@ -147,13 +147,13 @@ const getProjectsByCategoryId = async (categoryId) => {
 };
 
 /**
- * Create a new service project in the database.
- * @param {string} title
- * @param {string} description
- * @param {string} location
- * @param {string|Date} date
- * @param {number|string} organizationId
- * @returns {Promise<number|string>} The ID of the newly created project.
+ * Inserts a new service project and returns its generated ID.
+ * @param {string} title - Project header title.
+ * @param {string} description - Detailed project content.
+ * @param {string} location - Physical or virtual location.
+ * @param {string|Date} date - Scheduled date.
+ * @param {number|string} organizationId - Associated partner organization ID.
+ * @returns {Promise<number|string>} Generated ID of the new project.
  */
 const createProject = async (title, description, location, date, organizationId) => {
     const query = `
@@ -163,10 +163,7 @@ const createProject = async (title, description, location, date, organizationId)
     `;
 
     try {
-        const queryParams = [title, description, location, date, organizationId];
-        const result = await db.query(query, queryParams);
-        
-        // Return the ID of the newly inserted project
+        const result = await db.query(query, [title, description, location, date, organizationId]);
         return result.rows[0].project_id;
     } catch (error) {
         console.error("Data Layer Error [createProject]:", error.message);
@@ -175,14 +172,14 @@ const createProject = async (title, description, location, date, organizationId)
 };
 
 /**
- * Updates an existing service project in the database.
- * @param {number|string} id - The ID of the project to update.
- * @param {string} title - The updated project title.
- * @param {string} description - The updated project description.
- * @param {string} location - The updated project location.
- * @param {string|Date} date - The updated project date.
- * @param {number|string} organizationId - The ID of the associated organization.
- * @returns {Promise<object>} The updated project object.
+ * Updates details for an existing service project record.
+ * @param {number|string} id - Database ID of the project to update.
+ * @param {string} title - Updated title.
+ * @param {string} description - Updated summary.
+ * @param {string} location - Updated location.
+ * @param {string|Date} date - Updated date.
+ * @param {number|string} organizationId - Updated organization ID.
+ * @returns {Promise<Object>} Updated project row data.
  */
 const updateProject = async (id, title, description, location, date, organizationId) => {
     const query = `
@@ -198,10 +195,8 @@ const updateProject = async (id, title, description, location, date, organizatio
     `;
 
     try {
-        const queryParams = [title, description, location, date, organizationId, id];
-        const result = await db.query(query, queryParams);
+        const result = await db.query(query, [title, description, location, date, organizationId, id]);
 
-        // If no rows were returned/updated, throw an error
         if (result.rows.length === 0) {
             throw new Error(`Project with ID ${id} not found.`);
         }
@@ -213,7 +208,6 @@ const updateProject = async (id, title, description, location, date, organizatio
     }
 };
 
-// Export the model functions
 export { 
     getAllProjects, 
     getProjectsByOrganizationId, 

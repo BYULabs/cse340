@@ -1,4 +1,5 @@
 import db from './db.js';
+import bcrypt from 'bcrypt';
 
 /**
  * Inserts a new user record into the database and assigns them the default user role.
@@ -38,4 +39,62 @@ const createUser = async (name, email, passwordHash) => {
     }
 };
 
-export { createUser };
+/**
+ * Finds a user in the database by their email address.
+ * @param {string} email 
+ * @returns {Promise<Object|null>}
+ */
+const findUserByEmail = async (email) => {
+    const query = `
+        SELECT user_id, name, email, password_hash, role_id 
+        FROM users 
+        WHERE email = $1
+    `;
+    const queryParams = [email];
+    
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+        return null; // User not found
+    }
+    
+    return result.rows[0];
+};
+
+/**
+ * Compares a plain text password with a hashed password.
+ * @param {string} password 
+ * @param {string} passwordHash 
+ * @returns {Promise<boolean>}
+ */
+const verifyPassword = async (password, passwordHash) => {
+    return bcrypt.compare(password, passwordHash);
+};
+
+/**
+ * Authenticates a user by email and password.
+ * Removes the password_hash before returning the user object.
+ * @param {string} email 
+ * @param {string} password 
+ * @returns {Promise<Object|null>}
+ */
+const authenticateUser = async (email, password) => {
+    // 1. Find user by email
+    const user = await findUserByEmail(email);
+    if (!user) {
+        return null;
+    }
+
+    // 2. Verify password
+    const isMatch = await verifyPassword(password, user.password_hash);
+    if (!isMatch) {
+        return null;
+    }
+
+    // 3. Remove password_hash and return user object
+    delete user.password_hash;
+    return user;
+};
+
+// Export only createUser and authenticateUser as requested
+export { createUser, authenticateUser };

@@ -4,11 +4,38 @@
 DROP TABLE IF EXISTS project_category CASCADE;
 DROP TABLE IF EXISTS category CASCADE;
 DROP TABLE IF EXISTS project CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS organization CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
 
 -- =====================================================
 -- 1. CREATE TABLES & CONSTRAINTS
 -- =====================================================
+
+-- Table: roles
+CREATE TABLE roles (
+    role_id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) NOT NULL UNIQUE,
+    role_description TEXT NULL
+);
+
+-- Table: users
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_users_roles
+        FOREIGN KEY (role_id)
+        REFERENCES roles (role_id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE
+);
+
+-- Create index for foreign key performance
+CREATE INDEX fk_users_roles_idx ON users (role_id ASC);
 
 -- Table: organization
 CREATE TABLE organization (
@@ -67,6 +94,11 @@ CREATE INDEX fk_project_category_category_idx ON project_category (category_id A
 -- =====================================================
 -- 2. SEED DATA INSERTIONS
 -- =====================================================
+
+-- Insert Roles
+INSERT INTO roles (role_name, role_description) VALUES
+    ('user', 'Standard user with basic access'),
+    ('admin', 'Administrator with full system access');
 
 -- Insert Organizations
 INSERT INTO organization (name, description, contact_email, logo_filename) VALUES

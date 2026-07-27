@@ -31,6 +31,10 @@ import {
     processEditOrganizationForm,
     organizationValidation
 } from './controllers/organizations.js';
+import {
+    showUserRegistrationForm,
+    processUserRegistrationForm
+} from './controllers/users.js';
 
 /**
  * Application primary route definitions.
@@ -43,6 +47,11 @@ router.get('/', showHomePage);
 router.get('/organizations', showOrganizationsPage);
 router.get('/projects', showProjectsPage);
 router.get('/categories', showCategoriesPage);
+
+// --- User & Authentication Routes ---
+
+router.get('/register', showUserRegistrationForm);
+router.post('/register', processUserRegistrationForm);
 
 // --- Organization Routes ---
 

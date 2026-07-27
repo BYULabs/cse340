@@ -11,7 +11,7 @@
 
     <nav id="navbar" class="navbar">
         <div class="nav-container">
-            <a href="#" class="nav-logo-group">
+            <a href="/" class="nav-logo-group">
                 <div class="logo-box">
                     <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
@@ -27,9 +27,14 @@
                 <a href="/projects" class="nav-link <%= page === 'projects' ? 'nav-link-highlight' : '' %>">Projects</a>
             </div>
 
+            <!-- DESKTOP ACTIONS -->
             <div class="desktop-actions">
-                <a href="/login" class="btn-text">Sign In</a>
-                <a href="/register" class="btn-primary">Register</a>
+                <% if (isLoggedIn) { %>
+                    <a href="/logout" class="btn-primary">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="btn-text">Sign In</a>
+                    <a href="/register" class="btn-primary">Register</a>
+                <% } %>
             </div>
 
             <button id="mobileMenuBtn" class="mobile-toggle-btn" aria-label="Open Menu">
@@ -42,6 +47,7 @@
         </div>
     </nav>
 
+    <!-- MOBILE MENU -->
     <div id="mobileMenu" class="mobile-menu">
         <div class="mobile-menu-inner">
             <div class="mobile-menu-header">
@@ -59,9 +65,15 @@
                 <a href="/categories" class="mobile-link <%= page === 'categories' ? 'highlighted' : '' %>">Categories</a>
                 <a href="/projects" class="mobile-link <%= page === 'projects' ? 'highlighted' : '' %>">Projects</a>
             </div>
+
+            <!-- MOBILE ACTIONS -->
             <div class="mobile-actions-container">
-                <a href="#" class="btn-primary full-width">Register</a>
-                <a href="#" class="btn-outline full-width">Sign In</a>
+                <% if (isLoggedIn) { %>
+                    <a href="/logout" class="btn-primary full-width">Logout</a>
+                <% } else { %>
+                    <a href="/register" class="btn-primary full-width">Register</a>
+                    <a href="/login" class="btn-outline full-width">Sign In</a>
+                <% } %>
             </div>
         </div>
     </div>

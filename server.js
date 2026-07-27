@@ -60,6 +60,11 @@ app.use((req, res, next) => {
  * Exposes application environment state to all view render contexts.
  */
 app.use((req, res, next) => {
+    res.locals.isLoggedIn = false;
+    if (req.session && req.session.user) {
+        res.locals.isLoggedIn = true;
+    }
+
     res.locals.NODE_ENV = NODE_ENV;
     next();
 });

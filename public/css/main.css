@@ -1482,6 +1482,61 @@ main.form-page-container {
     }
 }
 
+/* Container & Label Setup */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family:
+        system-ui,
+        -apple-system,
+        sans-serif;
+    max-width: 320px;
+}
+
+.input-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Password Input Base Styling */
+.input-wrapper input[type="password"],
+.input-wrapper input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    color: #1f2937;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+/* Hover & Focus States */
+.input-wrapper input:hover {
+    border-color: #9ca3af;
+}
+
+.input-wrapper input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Placeholder Styling */
+.input-wrapper input::placeholder {
+    color: #9ca3af;
+}
+
 /* ==========================================================================
    Alert & Flash Messages Architecture
    ========================================================================== */

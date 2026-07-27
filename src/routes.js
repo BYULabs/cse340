@@ -33,7 +33,10 @@ import {
 } from './controllers/organizations.js';
 import {
     showUserRegistrationForm,
-    processUserRegistrationForm
+    processUserRegistrationForm,
+    showLoginForm,
+    processLoginForm,
+    processLogout
 } from './controllers/users.js';
 
 /**
@@ -52,6 +55,10 @@ router.get('/categories', showCategoriesPage);
 
 router.get('/register', showUserRegistrationForm);
 router.post('/register', processUserRegistrationForm);
+
+router.get('/login', showLoginForm);
+router.post('/login', processLoginForm);
+router.get('/logout', processLogout);
 
 // --- Organization Routes ---
 

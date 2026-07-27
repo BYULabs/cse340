@@ -5,6 +5,27 @@
     <h2>Edit Project</h2>
     <p>Update the service project details below.</p>
 
+    <!-- FLASH MESSAGES -->
+    <% if (messages && messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul class="alert-list">
+                <% messages.error.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (messages && messages.success && messages.success.length > 0) { %>
+        <div class="alert alert-success">
+            <ul class="alert-list">
+                <% messages.success.forEach(function(msg) { %>
+                    <li><%= msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
     <section class="form-card">
         <% 
             // Format project date to YYYY-MM-DD for standard HTML date picker input

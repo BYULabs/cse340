@@ -3,6 +3,27 @@
 <main class="project-detail-container">
     <h1><%= title %></h1>
 
+    <!-- FLASH MESSAGES -->
+    <% if (messages && messages.success && messages.success.length > 0) { %>
+        <div class="alert alert-success">
+            <ul class="alert-list">
+                <% messages.success.forEach(function(msg) { %>
+                    <li><%= msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (messages && messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul class="alert-list">
+                <% messages.error.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
     <section class="project-profile-card">
         <div class="project-profile-header">
             <div class="project-profile-info">

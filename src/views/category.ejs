@@ -4,16 +4,6 @@
     <!-- Subtitle (Matches site design hierarchy) -->
     <h1><%= title %></h1>
 
-    <!-- Category Title and Edit Button Header -->
-    <div class="category-title-header">
-        <h2><%= category.name %></h2>
-        <a href="/edit-category/<%= category.category_id || category.id %>" class="btn-outline btn-edit-org">
-            ✏️ Edit Category
-        </a>
-    </div>
-
-    <p class="section-lead">Explore active initiatives grouped under this service sector.</p>
-
     <!-- FLASH MESSAGES -->
     <% if (messages && messages.error && messages.error.length > 0) { %>
         <div class="alert alert-danger" style="width: 100%;">
@@ -34,6 +24,17 @@
             </ul>
         </div>
     <% } %>
+    
+    <!-- Category Title and Edit Button Header -->
+    <div class="category-title-header">
+        <h2><%= category.name %></h2>
+        <a href="/edit-category/<%= category.category_id || category.id %>" class="btn-outline btn-edit-org">
+            ✏️ Edit Category
+        </a>
+    </div>
+
+    <p class="section-lead">Explore active initiatives grouped under this service sector.</p>
+
 
     <!-- Projects Grid Section -->
     <section class="org-projects-section" style="width: 100%;">

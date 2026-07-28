@@ -41,14 +41,16 @@ const createUser = async (name, email, passwordHash) => {
 
 /**
  * Finds a user in the database by their email address.
+ * Joins the roles table to include role_name instead of role_id.
  * @param {string} email 
  * @returns {Promise<Object|null>}
  */
 const findUserByEmail = async (email) => {
     const query = `
-        SELECT user_id, name, email, password_hash, role_id 
-        FROM users 
-        WHERE email = $1
+        SELECT u.user_id, u.name, u.email, u.password_hash, r.role_name 
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        WHERE u.email = $1
     `;
     const queryParams = [email];
     

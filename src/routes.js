@@ -36,7 +36,9 @@ import {
     processUserRegistrationForm,
     showLoginForm,
     processLoginForm,
-    processLogout
+    processLogout,
+    showDashboard,
+    requireLogin
 } from './controllers/users.js';
 
 /**
@@ -55,10 +57,10 @@ router.get('/categories', showCategoriesPage);
 
 router.get('/register', showUserRegistrationForm);
 router.post('/register', processUserRegistrationForm);
-
 router.get('/login', showLoginForm);
 router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
+router.get('/dashboard', requireLogin, showDashboard);
 
 // --- Organization Routes ---
 

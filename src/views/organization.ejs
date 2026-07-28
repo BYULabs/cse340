@@ -36,11 +36,13 @@
                 <% } %>
             </div>
             <!-- Added Edit Link Button -->
-            <div class="org-profile-actions">
-                <a href="/edit-organization/<%= organizationDetails.organization_id || organizationDetails.id %>" class="btn-outline btn-edit-org">
-                    ✏️ Edit Organization
-                </a>
-            </div>
+            <% if (user && user.role_name === 'admin') { %>
+                <div class="org-profile-actions">
+                    <a href="/edit-organization/<%= organizationDetails.organization_id || organizationDetails.id %>" class="btn-outline btn-edit-org">
+                        ✏️ Edit Organization
+                    </a>
+                </div>
+            <% } %>
         </div>
         <div class="org-profile-body">
             <p class="org-profile-desc"><%= organizationDetails.description %></p>

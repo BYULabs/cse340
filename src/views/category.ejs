@@ -28,9 +28,11 @@
     <!-- Category Title and Edit Button Header -->
     <div class="category-title-header">
         <h2><%= category.name %></h2>
-        <a href="/edit-category/<%= category.category_id || category.id %>" class="btn-outline btn-edit-org">
-            ✏️ Edit Category
-        </a>
+        <% if (user && user.role_name === 'admin') { %>
+            <a href="/edit-category/<%= category.category_id || category.id %>" class="btn-outline btn-edit-org">
+                ✏️ Edit Category
+            </a>
+        <% } %>
     </div>
 
     <p class="section-lead">Explore active initiatives grouped under this service sector.</p>

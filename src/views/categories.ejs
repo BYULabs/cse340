@@ -38,10 +38,12 @@
     </ul>
 
     <!-- Bottom Action Callout -->
-    <section class="categories-bottom-action">
-        <p>Don't see the sector you are looking for?</p>
-        <a href="/new-category" class="btn-primary">Add New Category</a>
-    </section>
+    <% if (user && user.role_name === 'admin') { %>
+        <section class="categories-bottom-action">
+            <p>Don't see the sector you are looking for?</p>
+            <a href="/new-category" class="btn-primary">Add New Category</a>
+        </section>
+    <% } %>
 </main>
 
 <%- include('partials/footer') %>

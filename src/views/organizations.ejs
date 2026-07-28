@@ -32,10 +32,12 @@
     </ul>
 
     <!-- Bottom Action Banner -->
-    <div class="orgs-bottom-action">
-        <p>Want to list your non-profit or service group?</p>
-        <a href="/new-organization" class="btn-primary">+ Add New Organization</a>
-    </div>
+    <% if (user && user.role_name === 'admin') { %>
+        <div class="orgs-bottom-action">
+            <p>Want to list your non-profit or service group?</p>
+            <a href="/new-organization" class="btn-primary">+ Add New Organization</a>
+        </div>
+    <% } %>
 </main>
 
 <%- include('partials/footer') %>

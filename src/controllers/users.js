@@ -5,6 +5,31 @@ import { createUser, authenticateUser } from '../models/users.js';
 const SALT_ROUNDS = 10;
 
 /**
+ * Middleware to protect routes that require authentication.
+ * Checks if the user is logged in via session.
+ */
+const requireLogin = (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        req.flash('error', 'You must be logged in to access that page.');
+        return res.redirect('/login');
+    }
+    next();
+};
+
+/**
+ * Renders the user dashboard view with user details.
+ */
+const showDashboard = (req, res) => {
+    const user = req.session.user;
+    res.render('dashboard', { 
+        title: 'Dashboard',
+        page: 'dashboard',
+        name: user.name,
+        email: user.email
+    });
+};
+
+/**
  * Renders the user registration form view.
  */
 const showUserRegistrationForm = async (req, res) => {
@@ -75,7 +100,7 @@ const processLoginForm = async (req, res) => {
             // Log user for debugging purposes
             console.log('User logged in:', user);
 
-            res.redirect('/');
+            res.redirect('/dashboard');
         } else {
             // Authentication failed
             req.flash('error', 'Invalid email or password.');
@@ -102,6 +127,8 @@ const processLogout = (req, res) => {
 };
 
 export {
+    requireLogin,
+    showDashboard,
     showUserRegistrationForm,
     processUserRegistrationForm,
     showLoginForm,

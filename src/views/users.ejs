@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+
+<main class="project-detail-container">
+    <h1><%= title %></h1>
+
+    <!-- FLASH MESSAGES -->
+    <% if (messages && messages.error && messages.error.length > 0) { %>
+        <div class="alert alert-danger">
+            <ul class="alert-list">
+                <% messages.error.forEach(function(error) { %>
+                    <li><%= error %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <% if (messages && messages.success && messages.success.length > 0) { %>
+        <div class="alert alert-success">
+            <ul class="alert-list">
+                <% messages.success.forEach(function(msg) { %>
+                    <li><%= msg %></li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+
+    <p class="section-lead">All registered accounts across the platform.</p>
+
+    <!-- Table Container Card -->
+    <section class="form-card" style="width: 100%; max-width: 100%;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--gray-100); color: var(--navy-900);">
+                        <th style="padding: 1rem 0.75rem; font-weight: 700;">Name</th>
+                        <th style="padding: 1rem 0.75rem; font-weight: 700;">Email (Username)</th>
+                        <th style="padding: 1rem 0.75rem; font-weight: 700;">Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (users && users.length > 0) { %>
+                        <% users.forEach(u => { %>
+                            <tr style="border-bottom: 1px solid var(--gray-100);">
+                                <td style="padding: 1rem 0.75rem; font-weight: 600; color: var(--navy-900);"><%= u.name %></td>
+                                <td style="padding: 1rem 0.75rem; color: var(--gray-600);"><%= u.email %></td>
+                                <td style="padding: 1rem 0.75rem;">
+                                    <span class="hero-badge" style="text-transform: capitalize;">
+                                        <%= u.role_name %>
+                                    </span>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3" style="padding: 2rem; text-align: center; color: var(--gray-500);">
+                                No registered users found.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<%- include('partials/footer') %>

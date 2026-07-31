@@ -1,8 +1,7 @@
 <%- include('partials/header') %>
 
-<main class="form-page-container">
+<main class="project-detail-container">
     <h1><%= title %></h1>
-    <p class="section-lead">Welcome to your account dashboard.</p>
 
     <!-- FLASH MESSAGES -->
     <% if (messages && messages.error && messages.error.length > 0) { %>
@@ -25,13 +24,38 @@
         </div>
     <% } %>
 
-    <div class="form-card">
-        <h2>Dashboard</h2>
-        <div class="user-info">
-            <p><strong>Name:</strong> <%= name %></p>
-            <p><strong>Username:</strong> <%= email %></p>
+    <!-- User Profile Card -->
+    <section class="org-profile-card">
+        <div class="org-profile-header">
+            <div class="org-profile-info">
+                <h2>Welcome back, <%= name %>!</h2>
+                <span class="org-profile-email">✉️ <%= email %></span>
+            </div>
+            <% if (typeof user !== 'undefined' && user && user.role_name) { %>
+                <div class="hero-badge" style="text-transform: uppercase;">
+                    <%= user.role_name %> Account
+                </div>
+            <% } %>
         </div>
-    </div>
+        <div class="org-profile-body">
+            <p class="org-profile-desc">
+                Manage your profile settings or access administrative control panels below.
+            </p>
+        </div>
+    </section>
+
+    <!-- Admin Management Panel Callout -->
+    <% if (typeof user !== 'undefined' && user && user.role_name === 'admin') { %>
+        <section class="categories-bottom-action">
+            <div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--navy-900);">Admin Management Tools</h3>
+                <p style="margin-top: 0.25rem;">View and manage registered accounts across the platform.</p>
+            </div>
+            <a href="/users" class="btn-primary">
+                👥 Manage All Users
+            </a>
+        </section>
+    <% } %>
 </main>
 
 <%- include('partials/footer') %>

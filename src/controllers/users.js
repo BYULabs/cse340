@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
+
 
 // Number of salt rounds for bcrypt hashing
 const SALT_ROUNDS = 10;
@@ -151,10 +152,28 @@ const processLogout = (req, res) => {
     });
 };
 
+/**
+ * Renders the users list view for admin users.
+ */
+const showUsersPage = async (req, res, next) => {
+    try {
+        const users = await getAllUsers();
+        res.render('users', {
+            title: 'Manage Users',
+            page: 'users',
+            users
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        next(error);
+    }
+};
+
 export {
     requireLogin,
     requireRole,
     showDashboard,
+    showUsersPage,
     showUserRegistrationForm,
     processUserRegistrationForm,
     showLoginForm,

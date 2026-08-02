@@ -8,7 +8,9 @@ import {
     processNewProjectForm,
     showEditProjectForm,
     processEditProjectForm,
-    projectValidation 
+    projectValidation,
+    volunteerForProject,
+    unvolunteerForProject
 } from './controllers/projects.js';
 import { 
     showCategoriesPage, 
@@ -80,6 +82,10 @@ router.get('/new-project', requireRole('admin'), showNewProjectForm);
 router.post('/new-project', requireRole('admin'), projectValidation, processNewProjectForm);
 router.get('/edit-project/:id', requireRole('admin'), showEditProjectForm);
 router.post('/edit-project/:id', requireRole('admin'), projectValidation, processEditProjectForm);
+
+// Volunteer Actions
+router.get('/project/:id/volunteer', requireLogin, volunteerForProject);
+router.get('/project/:id/unvolunteer', requireLogin, unvolunteerForProject);
 
 // --- Category Routes & Assignments ---
 

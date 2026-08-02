@@ -30,6 +30,7 @@
             <!-- DESKTOP ACTIONS -->
             <div class="desktop-actions">
                 <% if (isLoggedIn) { %>
+                    <a href="/dashboard" class="btn-text">Dashboard</a>
                     <a href="/logout" class="btn-primary">Logout</a>
                 <% } else { %>
                     <a href="/login" class="btn-text">Sign In</a>
@@ -69,6 +70,7 @@
             <!-- MOBILE ACTIONS -->
             <div class="mobile-actions-container">
                 <% if (isLoggedIn) { %>
+                    <a href="/dashboard" class="btn-outline full-width">Dashboard</a>
                     <a href="/logout" class="btn-primary full-width">Logout</a>
                 <% } else { %>
                     <a href="/register" class="btn-primary full-width">Register</a>

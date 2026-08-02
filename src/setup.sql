@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS project CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS organization CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS project_volunteer CASCADE;
 
 -- =====================================================
 -- 1. CREATE TABLES & CONSTRAINTS
@@ -90,6 +91,28 @@ CREATE TABLE project_category (
 -- Create indexes for junction table lookup performance
 CREATE INDEX fk_project_category_project_idx ON project_category (project_id ASC);
 CREATE INDEX fk_project_category_category_idx ON project_category (category_id ASC);
+
+-- Table: project_volunteer (Junction Table for User Volunteers)
+CREATE TABLE project_volunteer (
+    user_id INT NOT NULL,
+    project_id INT NOT NULL,
+    signup_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, project_id),
+    CONSTRAINT fk_project_volunteer_user
+        FOREIGN KEY (user_id)
+        REFERENCES users (user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_project_volunteer_project
+        FOREIGN KEY (project_id)
+        REFERENCES project (project_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create indexes for junction table lookup performance
+CREATE INDEX fk_project_volunteer_user_idx ON project_volunteer (user_id ASC);
+CREATE INDEX fk_project_volunteer_project_idx ON project_volunteer (project_id ASC);
 
 -- =====================================================
 -- 2. SEED DATA INSERTIONS
@@ -176,3 +199,7 @@ INSERT INTO project_category (project_id, category_id) VALUES
 (14, 3), -- Winter Coats -> Community Service
 (14, 4), -- Winter Coats -> Health and Wellness
 (15, 3); -- Toy Drive -> Community Service
+
+-- Insert Sample Users
+INSERT INTO users (name, email, password_hash, role_id) VALUES
+('Admin', 'admin@example.com', 'cse340!', 2);

@@ -208,6 +208,84 @@ const updateProject = async (id, title, description, location, date, organizatio
     }
 };
 
+/**
+ * Adds a user as a volunteer to a specific project.
+ * @param {number|string} userId - Database ID of the volunteering user.
+ * @param {number|string} projectId - Database ID of the target project.
+ * @returns {Promise<Object>} The newly created project_volunteer record.
+ */
+const addVolunteerToProject = async (userId, projectId) => {
+    const query = `
+        INSERT INTO public.project_volunteer (user_id, project_id)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id, project_id) DO NOTHING
+        RETURNING user_id, project_id, signup_date;
+    `;
+
+    try {
+        const result = await db.query(query, [userId, projectId]);
+        return result.rows[0] || null;
+    } catch (error) {
+        console.error("Data Layer Error [addVolunteerToProject]:", error.message);
+        throw new Error("Unable to register volunteer for this project at this time.");
+    }
+};
+
+/**
+ * Removes a user's volunteer registration from a specific project.
+ * @param {number|string} userId - Database ID of the user.
+ * @param {number|string} projectId - Database ID of the project to leave.
+ * @returns {Promise<boolean>} True if a record was deleted, false otherwise.
+ */
+const removeVolunteerFromProject = async (userId, projectId) => {
+    const query = `
+        DELETE FROM public.project_volunteer
+        WHERE user_id = $1 AND project_id = $2
+        RETURNING user_id, project_id;
+    `;
+
+    try {
+        const result = await db.query(query, [userId, projectId]);
+        return result.rowCount > 0;
+    } catch (error) {
+        console.error("Data Layer Error [removeVolunteerFromProject]:", error.message);
+        throw new Error("Unable to remove volunteer registration at this time.");
+    }
+};
+
+/**
+ * Retrieves all service projects a specific user has volunteered for,
+ * including organization details and volunteer signup dates.
+ * @param {number|string} userId - Database ID of the user.
+ * @returns {Promise<Array<Object>>} List of volunteered project records.
+ */
+const getProjectsByVolunteerId = async (userId) => {
+    const query = `
+        SELECT 
+            p.project_id, 
+            p.title, 
+            p.description, 
+            p.location, 
+            p.project_date, 
+            p.organization_id,
+            o.name AS organization_name,
+            pv.signup_date
+        FROM public.project_volunteer pv
+        INNER JOIN public.project p ON pv.project_id = p.project_id
+        INNER JOIN public.organization o ON p.organization_id = o.organization_id
+        WHERE pv.user_id = $1
+        ORDER BY p.project_date ASC;
+    `;
+
+    try {
+        const result = await db.query(query, [userId]);
+        return result.rows;
+    } catch (error) {
+        console.error("Data Layer Error [getProjectsByVolunteerId]:", error.message);
+        throw new Error("Unable to retrieve volunteered projects for this user.");
+    }
+};
+
 export { 
     getAllProjects, 
     getProjectsByOrganizationId, 
@@ -215,5 +293,8 @@ export {
     getProjectDetails,
     getProjectsByCategoryId,
     createProject,
-    updateProject
+    updateProject,
+    addVolunteerToProject,
+    removeVolunteerFromProject,
+    getProjectsByVolunteerId
 };

@@ -41,9 +41,9 @@
                 </div>
             </div>
 
-            <!-- Action Buttons: Edit Project and Assign Categories -->
+            <!-- Action Buttons: Edit Project & Assign Categories (Admin Only) -->
             <% if (user && user.role_name === 'admin') { %>
-                <div class="project-profile-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <div class="project-profile-actions">
                     <a href="/edit-project/<%= project.project_id || project.id %>" class="btn-outline btn-edit-org">
                         ✏️ Edit Project
                     </a>
@@ -55,11 +55,11 @@
         </div>
         
         <div class="project-profile-body">
-            <!-- Category Tags -->
+            <!-- Category Badges -->
             <% if (categories && categories.length > 0) { %>
-                <div class="project-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div class="project-tags">
                     <% categories.forEach(category => { %>
-                        <a href="/category/<%= category.category_id %>" class="hero-badge" style="text-decoration: none; transition: background-color 0.2s ease, color 0.2s ease; display: inline-block;">
+                        <a href="/category/<%= category.category_id %>" class="hero-badge category-badge-link">
                             <%= category.name %>
                         </a>
                     <% }); %>
@@ -74,6 +74,34 @@
                     <%= project.organization_name %>
                 </a>
             </div>
+
+            <!-- Volunteer Action Section (Only visible if logged in) -->
+            <% if (user) { %>
+                <div class="volunteer-card-section">
+                    <% if (isVolunteering) { %>
+                        <div class="volunteer-active-badge">
+                            <span class="volunteer-status-icon">✅</span>
+                            <div class="volunteer-status-text">
+                                <strong>You are volunteering for this project</strong>
+                                <span>Thank you for contributing your time!</span>
+                            </div>
+                        </div>
+                        <a href="/project/<%= project.project_id || project.id %>/unvolunteer" class="btn-outline btn-danger-outline">
+                            Remove yourself as a volunteer
+                        </a>
+                    <% } else { %>
+                        <div class="volunteer-cta-block">
+                            <div class="volunteer-cta-info">
+                                <strong>Want to help out?</strong>
+                                <span>Join other volunteers making an impact on this project.</span>
+                            </div>
+                            <a href="/project/<%= project.project_id || project.id %>/volunteer" class="btn-primary">
+                                🙌 Volunteer for this Project
+                            </a>
+                        </div>
+                    <% } %>
+                </div>
+            <% } %>
         </div>
     </section>
 </main>

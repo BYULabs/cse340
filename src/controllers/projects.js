@@ -4,7 +4,10 @@ import {
     getProjectDetails, 
     getProjectsByCategoryId,
     createProject,
-    updateProject
+    updateProject,
+    addVolunteerToProject,
+    removeVolunteerFromProject,
+    getProjectsByVolunteerId
 } from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
@@ -65,6 +68,7 @@ const showProjectsPage = async (req, res, next) => {
 
 /**
  * Renders detail view for a specific project along with associated categories.
+ * Checks whether the current session user has volunteered for this project.
  */
 const showProjectDetailsPage = async (req, res, next) => {
     try {
@@ -76,7 +80,23 @@ const showProjectDetailsPage = async (req, res, next) => {
         }
 
         const categories = await getCategoriesByProjectId(id);
-        res.render('project', { title: project.title, project, categories, page: 'project-details' });
+        
+        // Determine if current user is logged in and actively volunteering for this project
+        let isVolunteering = false;
+        if (req.session && req.session.user) {
+            const userVolunteeredProjects = await getProjectsByVolunteerId(req.session.user.user_id);
+            isVolunteering = userVolunteeredProjects.some(
+                p => Number(p.project_id) === Number(id)
+            );
+        }
+
+        res.render('project', { 
+            title: project.title, 
+            project, 
+            categories, 
+            page: 'project-details',
+            isVolunteering
+        });
     } catch (error) {
         console.error("Error loading project details page:", error);
         res.status(500).send(`Database Error: ${error.message}`);
@@ -172,6 +192,52 @@ const processEditProjectForm = async (req, res, next) => {
     }
 };
 
+/**
+ * Adds the logged-in user as a volunteer to a project.
+ */
+const volunteerForProject = async (req, res, next) => {
+    try {
+        if (!req.session || !req.session.user) {
+            req.flash('error', 'You must be logged in to volunteer for a project.');
+            return res.redirect('/login');
+        }
+
+        const { id } = req.params;
+        const userId = req.session.user.user_id;
+
+        await addVolunteerToProject(userId, id);
+
+        req.flash('success', 'You have successfully signed up as a volunteer!');
+        res.redirect(`/project/${id}`);
+    } catch (error) {
+        console.error("Error volunteering for project:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
+/**
+ * Removes the logged-in user from volunteering for a project.
+ */
+const unvolunteerForProject = async (req, res, next) => {
+    try {
+        if (!req.session || !req.session.user) {
+            req.flash('error', 'You must be logged in to manage your volunteer status.');
+            return res.redirect('/login');
+        }
+
+        const { id } = req.params;
+        const userId = req.session.user.user_id;
+
+        await removeVolunteerFromProject(userId, id);
+
+        req.flash('success', 'You have removed yourself as a volunteer for this project.');
+        res.redirect(`/project/${id}`);
+    } catch (error) {
+        console.error("Error removing volunteer status:", error);
+        res.status(500).send(`Database Error: ${error.message}`);
+    }
+};
+
 export {
     projectValidation,
     showProjectsPage,
@@ -179,5 +245,7 @@ export {
     showNewProjectForm,
     processNewProjectForm,
     showEditProjectForm,
-    processEditProjectForm
+    processEditProjectForm,
+    volunteerForProject,
+    unvolunteerForProject
 };

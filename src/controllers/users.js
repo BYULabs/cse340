@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
-
+import { getProjectsByVolunteerId } from '../models/projects.js';
 
 // Number of salt rounds for bcrypt hashing
 const SALT_ROUNDS = 10;
@@ -43,16 +43,27 @@ const requireRole = (role) => {
 };
 
 /**
- * Renders the user dashboard view with user details.
+ * Renders the user dashboard view with user details and volunteered projects.
  */
-const showDashboard = (req, res) => {
-    const user = req.session.user;
-    res.render('dashboard', { 
-        title: 'Dashboard',
-        page: 'dashboard',
-        name: user.name,
-        email: user.email
-    });
+const showDashboard = async (req, res, next) => {
+    try {
+        const user = req.session.user;
+
+        // Fetch projects the logged-in user has signed up to volunteer for
+        const volunteeredProjects = await getProjectsByVolunteerId(user.user_id);
+
+        res.render('dashboard', { 
+            title: 'Dashboard',
+            page: 'dashboard',
+            name: user.name,
+            email: user.email,
+            user,
+            volunteeredProjects
+        });
+    } catch (error) {
+        console.error("Error loading dashboard:", error);
+        next(error);
+    }
 };
 
 /**
